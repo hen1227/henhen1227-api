@@ -1,0 +1,24 @@
+{
+  "name": "website-api",
+  "version": "1.0.0",
+  "description": "The backend for Henhen1227.com",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hen1227/henhen1227-api.git"
+  },
+  "author": "Henry Abrahamsen <henry@henhen1227.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hen1227/henhen1227-api/issues"
+  },
+  "homepage": "https://github.com/hen1227/henhen1227-api#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ioredis": "^5.2.4"
+  }
+}
