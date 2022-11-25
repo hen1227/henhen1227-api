@@ -52,9 +52,6 @@ client.get("platform-climber-names", (err, result) => {
 app.post('/platform-climber/highscore', (req, res) => {
     var score = req.body.score;
     var name = req.body.name;
-
-    console.log(req.body.name);
-
     var changed = false;
     for (var i = 0; i < platform_climber_highscore.length; i++) {
         if(Number(score) >= Number(platform_climber_highscore[i])){
@@ -104,7 +101,7 @@ app.get('/platform-climber/download', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-	res.send("Couldn't find your request");
+	res.sendFile(`${__dirname}/index.html`);
 });
 
 
