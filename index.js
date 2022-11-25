@@ -98,6 +98,10 @@ app.get('/platform-climber/highscore', (req, res) => {
     //     value.push([platform_climber_names[i], platform_climber_highscore[i]]);
     // }
 });
+app.get('/platform-climber/download', (req, res) => {
+    let path = `${__dirname}/downloads/PlatformClimber-1.0-mac.dmg`;
+    res.download(path);
+});
 
 app.get('*', (req, res) => {
 	res.send("Couldn't find your request");
