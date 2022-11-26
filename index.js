@@ -98,7 +98,7 @@ app.get('/platform-climber/highscore', (req, res) => {
     res.send(value);
 });
 app.get('/platform-climber/download', (req, res) => {
-    let path = `${__dirname}/downloads/PlatformClimber-1.0-mac.dmg`;
+    let path = `${__dirname}/downloads/PlatformClimber-0.1.1-mac.dmg`;
     res.download(path);
 });
 
