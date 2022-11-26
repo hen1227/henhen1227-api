@@ -70,21 +70,6 @@ app.post('/platform-climber/highscore', (req, res) => {
         client.set('platform-climber-names', platform_climber_names.join(","));
     }
 
-    // let value = [];
-    // for(var i = 0; i < platform_climber_highscore.length; i++){
-    //     let score = {};
-    //     score[platform_climber_names[i]] = platform_climber_highscore[i];
-    //     value.push(score);
-    // }
-    // console.log(value);
-    let value = [];
-    for(var i = 0; i < platform_climber_highscore.length; i++){
-        value.push([platform_climber_names[i], platform_climber_highscore[i]]);
-    }
-    res.send(value);
-});
-
-app.get('/platform-climber/highscore', (req, res) => {
     let value = [];
     for(var i = 0; i < platform_climber_highscore.length; i++){
         let score = {};
@@ -92,12 +77,24 @@ app.get('/platform-climber/highscore', (req, res) => {
         value.push(score);
     }
     console.log(value);
+});
+
+app.get('/platform-climber/highscore', (req, res) => {
+    // let value = [];
+    // for(var i = 0; i < platform_climber_highscore.length; i++){
+    //     let score = {};
+    //     score[platform_climber_names[i]] = platform_climber_highscore[i];
+    //     value.push(score);
+    // }
+
+        let value = [];
+    for(var i = 0; i < platform_climber_highscore.length; i++){
+        value.push([platform_climber_names[i], platform_climber_highscore[i]]);
+    }
+
+    console.log(value);
     res.send(value);
 
-        // let value = [];
-    // for(var i = 0; i < platform_climber_highscore.length; i++){
-    //     value.push([platform_climber_names[i], platform_climber_highscore[i]]);
-    // }
 });
 app.get('/platform-climber/download', (req, res) => {
     let path = `${__dirname}/downloads/PlatformClimber-1.0-mac.dmg`;
