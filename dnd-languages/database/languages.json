@@ -1,0 +1,14 @@
+{
+    "Draconic": {
+        "languageName": "Draconic",
+        "latestVersion": 2
+    },
+    "Elvish": {
+        "languageName": "Elvish",
+        "latestVersion": 1
+    },
+    "Dwarvish": {
+        "languageName": "Dwarvish",
+        "latestVersion": 1
+    }
+}
