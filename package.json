@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon start",
     "start": "node src/index.js",
-    "deploy": "forever --watch --watchIgnore ./database/ ./src/index.js"
+    "deploy": "npm install & node src/index.js",
+    "deployForever": "forever --watch --watchIgnore ./database/ ./src/index.js"
   },
   "repository": {
     "type": "git",
