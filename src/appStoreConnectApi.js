@@ -1,18 +1,19 @@
 import {api} from 'node-app-store-connect-api';
 
-const {read, readAll, create, update, remove}
+const {read, readAll}
     // = await api({'issuerId':'71d3c72a-e63f-4709-a72e-b41ec95ab061', 'apiKey':'J9AVQYFM9C'});
     = await api({'issuerId': '71d3c72a-e63f-4709-a72e-b41ec95ab061', 'apiKey': 'B6QM5L5S9L'});
 
 // = await api({'issuerId':'71d3c72a-e63f-4709-a72e-b41ec95ab061', 'apiKey':'HGRV4S3LG3'});
 
 
-export class AppStoreConnectApi {
+export default class AppStoreConnectApi {
     constructor() {
         this.apps = [];
     }
 
     async reloadApi() {
+        this.apps = [];
         const {data: apps} = await readAll('https://api.appstoreconnect.apple.com/v1/apps');
         for (let i = 0; i < apps.length; i++) {
             const app = apps[i];

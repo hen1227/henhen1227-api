@@ -6,7 +6,8 @@ import fs from "fs";
 import express from 'express';
 import Database from "easy-json-database";
 
-import { AppStoreConnectApi } from "./appStoreConnectApi.js";
+import AppStoreConnectApi from "./appStoreConnectApi.js";
+import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
 
 
 // const AppStoreConnectApi = require("./appStoreConnectApi");
@@ -25,18 +26,32 @@ app.listen(port, function(){
 let appStoreApi = new AppStoreConnectApi();
 appStoreApi.reloadApi();
 
+let lastAppStoreUpdate = Date.now();
 
+updateAppStore();
+setInterval(updateAppStore, 4  * 60 * 60 * 1000);
+
+function updateAppStore(){
+    appStoreApi.reloadApi();
+
+    const today = new Date();
+    lastAppStoreUpdate = String(today.getMonth()+1) + '-' + String(today.getDate()) + '-' + today.getFullYear() + ' ' + String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds()).padStart(2, '0');
+
+    console.log(lastAppStoreUpdate);
+}
 
 app.get('/appstore/apps', (req, res) => {
-    res.send(appStoreApi.apps);
-    res.send(appStoreApi.apps);
+    res.send({
+        "data" : appStoreApi.apps,
+        "lastUpdate" : lastAppStoreUpdate,
+    });
 });
 
 
 //MARK: D&D LANGUAGES
 
-app.post('/dnd-languages/upload', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguage.upload(req, res))
-app.post('/dnd-languages/getCount', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguage.getCount(req, res))
+app.post('/dnd-languages/upload', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguagesUpload(req, res))
+app.post('/dnd-languages/getCount', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguagesGetCount(req, res))
 app.get('/dnd-languages/database/languages.json', function(req, res) {
     fs.readFile('database/languages.json', (err, data) => {
         if(err){
