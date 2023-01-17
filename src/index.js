@@ -1,16 +1,15 @@
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
 import bodyParser from "body-parser";
 import fs from "fs";
 
 import express from 'express';
 import Database from "easy-json-database";
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
-
-
-// const AppStoreConnectApi = require("./appStoreConnectApi");
 
 let app = express();
 let port = process.env.PORT || 5001
@@ -68,7 +67,7 @@ app.get('/dnd-languages/database/*.zip', function(req, res) {res.sendFile(__dirn
 app.get('/dnd-languages/database/*.tflite', (req, res) => { res.sendFile(__dirname+req.url.slice(14)) })
 app.get('/dnd-languages/database/*.png', (req, res) => {
     console.log(__dirname + req.url.slice(14));
-    res.sendFile(__dirname+req.url.slice(14)) })
+    res.sendFile(__dirname + req.url.slice(14)) })
 
 
 
