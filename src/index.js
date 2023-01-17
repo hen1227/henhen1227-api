@@ -12,7 +12,7 @@ import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
 
 let app = express();
-let port = process.env.PORT || 5001
+let port = process.env.PORT || 80
 
 app.use(express.json());
 
