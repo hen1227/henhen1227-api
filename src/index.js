@@ -8,7 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(__filename.slice(4));
 
 import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
@@ -80,15 +80,14 @@ app.get('/dnd-languages/database/languages.json', function(req, res) {
     })
 })
 app.get('/dnd-languages/database/*.zip', function(req, res) {
-    res.sendFile(__dirname+"/dnd-languages/database/"+path.basename(req.url));
+    res.sendFile(req.url, {root:'.'});
 })
 app.get('/dnd-languages/database/*.tflite', (req, res) => {
-    res.sendFile(__dirname+"/dnd-languages/database/"+path.basename(req.url));
+    res.sendFile(req.url, {root:'.'});
     //Google analytics
 })
 app.get('/dnd-languages/database/*.png', (req, res) => {
-    console.log(__dirname+"/dnd-languages/database/"+path.basename(req.url));
-    res.sendFile(__dirname+"/dnd-languages/database/"+path.basename(req.url));
+    res.sendFile(req.url, {root:'.'});
 })
 
 
