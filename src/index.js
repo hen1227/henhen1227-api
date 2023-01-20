@@ -4,12 +4,6 @@ import fs from "fs";
 import express from 'express';
 import Database from "easy-json-database";
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename.slice(4));
-
 import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
 import cors from 'cors';
@@ -17,11 +11,11 @@ import cors from 'cors';
 let app = express();
 let port = process.env.PORT || 80
 
-app.use(express.json());
 
 const corsWhitelist = ['http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
 const corsOptions = {
     origin: function (origin, callback) {
+        console.log(origin);
         if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true)
         } else {
@@ -31,6 +25,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
 app.listen(port, function(){
     console.log("Server started on port: "+port)
@@ -40,12 +35,9 @@ app.listen(port, function(){
 
 let appStoreApi = new AppStoreConnectApi();
 appStoreApi.reloadApi().then();
-
 let lastAppStoreUpdate = Date.now();
-
 updateAppStore();
 setInterval(updateAppStore, 4  * 60 * 60 * 1000);
-
 function updateAppStore(){
     appStoreApi.reloadApi().then();
 
@@ -65,8 +57,8 @@ app.get('/appstore/apps', (req, res) => {
 
 //MARK: D&D LANGUAGES
 
-app.post('/dnd-languages/upload', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguagesUpload(req, res))
-app.post('/dnd-languages/getCount', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguagesGetCount(req, res))
+app.post('/dnd-languages/upload', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesUpload(req, res))
+app.post('/dnd-languages/getCount', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesGetCount(req, res))
 app.get('/dnd-languages/database/languages.json', function(req, res) {
     fs.readFile('dnd-languages/database/languages.json', (err, data) => {
         if(err){
@@ -165,7 +157,7 @@ app.get('/platform-climber/download', (req, res) => {
 //MARK: MAIN
 
 app.get('*', (req, res) => {
-	res.sendFile(`${__dirname}/index.html`);
+	res.sendFile('/src/index.html', {root:'.'});
 });
 
 
