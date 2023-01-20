@@ -19,7 +19,7 @@ let port = process.env.PORT || 80
 
 app.use(express.json());
 
-const corsWhitelist = ['http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com']
+const corsWhitelist = ['http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
 const corsOptions = {
     origin: function (origin, callback) {
         if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
