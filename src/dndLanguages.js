@@ -72,7 +72,7 @@ export function dndLanguagesUpload(req, res) {
     res.status(200).json({"Status": "Uploaded Successful!", "Message": "The "+letterExt.toString()+"th "+realJson.letter+" has been uploaded to the database" });
 }
 export function dndLanguagesGetCount(req, res) {
-    console.log(req.body)
+    console.log("Get count: " + req.body)
     let response = []
     const dir = fs.readdirSync(databaseLocalPath+req.body.language+'/')
     for (const symbol of dir){

@@ -59,8 +59,8 @@ app.get('/appstore/apps', (req, res) => {
 
 app.post('/dnd-languages/upload', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesUpload(req, res))
 app.post('/dnd-languages/getCount', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesGetCount(req, res))
-app.get('/dnd-languages/database/languages.json', function(req, res) {
-    fs.readFile('dnd-languages/database/languages.json', (err, data) => {
+app.get('/dnd-languages/languages.json', function(req, res) {
+    fs.readFile('database/dnd-languages/languages.json', (err, data) => {
         if(err){
             console.log('Something went wrong');
             console.log(err);
