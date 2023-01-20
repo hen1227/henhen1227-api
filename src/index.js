@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// import AppStoreConnectApi from "./appStoreConnectApi.js";
+import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
 import cors from 'cors';
 
@@ -20,7 +20,7 @@ app.use(express.json());
 const corsWhitelist = ['http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com']
 const corsOptions = {
     origin: function (origin, callback) {
-        if (corsWhitelist.indexOf(origin) !== -1) {
+        if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true)
         } else {
             callback(new Error('Not allowed by CORS'))
@@ -36,8 +36,8 @@ app.listen(port, function(){
 
 //MARK: APP STORE API
 
-// let appStoreApi = new AppStoreConnectApi();
-// appStoreApi.reloadApi();
+let appStoreApi = new AppStoreConnectApi();
+appStoreApi.reloadApi();
 
 let lastAppStoreUpdate = Date.now();
 
@@ -45,7 +45,7 @@ updateAppStore();
 setInterval(updateAppStore, 4  * 60 * 60 * 1000);
 
 function updateAppStore(){
-    // appStoreApi.reloadApi();
+    appStoreApi.reloadApi();
 
     const today = new Date();
     lastAppStoreUpdate = String(today.getMonth()+1) + '-' + String(today.getDate()) + '-' + today.getFullYear() + ' ' + String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds()).padStart(2, '0');
@@ -77,11 +77,17 @@ app.get('/dnd-languages/database/languages.json', function(req, res) {
         }
     })
 })
-app.get('/dnd-languages/database/*.zip', function(req, res) {res.sendFile(__dirname+req.url.slice(14)) })
-app.get('/dnd-languages/database/*.tflite', (req, res) => { res.sendFile(__dirname+req.url.slice(14)) })
+app.get('/dnd-languages/database/*.zip', function(req, res) {
+    res.sendFile(__dirname+req.url.slice(18));
+})
+app.get('/dnd-languages/database/*.tflite', (req, res) => {
+    res.sendFile(__dirname+req.url.slice(18));
+    //Google analytics
+})
 app.get('/dnd-languages/database/*.png', (req, res) => {
-    console.log(__dirname + req.url.slice(14));
-    res.sendFile(__dirname + req.url.slice(14)) })
+    console.log(__dirname + req.url.slice(18));
+    res.sendFile(__dirname + req.url.slice(18));
+})
 
 
 
@@ -96,8 +102,6 @@ const platformClimberDB = new Database("./database/platformClimber.json", {
 
 let platformClimberScores = platformClimberDB.get("scores");
 let platformClimberNames = platformClimberDB.get("names");
-
-
 
 const platformClimberHighScores = ((asObject) => {
     let value = [];
