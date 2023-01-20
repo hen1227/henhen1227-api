@@ -8,13 +8,27 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-import AppStoreConnectApi from "./appStoreConnectApi.js";
+// import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
+import cors from 'cors';
 
 let app = express();
 let port = process.env.PORT || 80
 
 app.use(express.json());
+
+const corsWhitelist = ['http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com']
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (corsWhitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
+
+app.use(cors(corsOptions));
 
 app.listen(port, function(){
     console.log("Server started on port: "+port)
@@ -22,8 +36,8 @@ app.listen(port, function(){
 
 //MARK: APP STORE API
 
-let appStoreApi = new AppStoreConnectApi();
-appStoreApi.reloadApi();
+// let appStoreApi = new AppStoreConnectApi();
+// appStoreApi.reloadApi();
 
 let lastAppStoreUpdate = Date.now();
 
@@ -31,7 +45,7 @@ updateAppStore();
 setInterval(updateAppStore, 4  * 60 * 60 * 1000);
 
 function updateAppStore(){
-    appStoreApi.reloadApi();
+    // appStoreApi.reloadApi();
 
     const today = new Date();
     lastAppStoreUpdate = String(today.getMonth()+1) + '-' + String(today.getDate()) + '-' + today.getFullYear() + ' ' + String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds()).padStart(2, '0');
@@ -52,7 +66,7 @@ app.get('/appstore/apps', (req, res) => {
 app.post('/dnd-languages/upload', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguagesUpload(req, res))
 app.post('/dnd-languages/getCount', bodyParser.urlencoded({ extended: false }), (req, res) => dndLanguagesGetCount(req, res))
 app.get('/dnd-languages/database/languages.json', function(req, res) {
-    fs.readFile('database/languages.json', (err, data) => {
+    fs.readFile('dnd-languages/database/languages.json', (err, data) => {
         if(err){
             console.log('Something went wrong');
             console.log(err);
