@@ -3,8 +3,10 @@ import fs from "fs";
 
 import express from 'express';
 import Database from "easy-json-database";
+
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -37,7 +39,7 @@ app.listen(port, function(){
 //MARK: APP STORE API
 
 let appStoreApi = new AppStoreConnectApi();
-appStoreApi.reloadApi();
+appStoreApi.reloadApi().then();
 
 let lastAppStoreUpdate = Date.now();
 
@@ -45,7 +47,7 @@ updateAppStore();
 setInterval(updateAppStore, 4  * 60 * 60 * 1000);
 
 function updateAppStore(){
-    appStoreApi.reloadApi();
+    appStoreApi.reloadApi().then();
 
     const today = new Date();
     lastAppStoreUpdate = String(today.getMonth()+1) + '-' + String(today.getDate()) + '-' + today.getFullYear() + ' ' + String(today.getHours()) + ":" + String(today.getMinutes()) + ":" + String(today.getSeconds()).padStart(2, '0');
@@ -78,15 +80,15 @@ app.get('/dnd-languages/database/languages.json', function(req, res) {
     })
 })
 app.get('/dnd-languages/database/*.zip', function(req, res) {
-    res.sendFile(__dirname+req.url.slice(18));
+    res.sendFile(__dirname+"/dnd-languages/database/"+path.basename(req.url));
 })
 app.get('/dnd-languages/database/*.tflite', (req, res) => {
-    res.sendFile(__dirname+req.url.slice(18));
+    res.sendFile(__dirname+"/dnd-languages/database/"+path.basename(req.url));
     //Google analytics
 })
 app.get('/dnd-languages/database/*.png', (req, res) => {
-    console.log(__dirname + req.url.slice(18));
-    res.sendFile(__dirname + req.url.slice(18));
+    console.log(__dirname+"/dnd-languages/database/"+path.basename(req.url));
+    res.sendFile(__dirname+"/dnd-languages/database/"+path.basename(req.url));
 })
 
 
