@@ -71,15 +71,15 @@ app.get('/dnd-languages/database/languages.json', function(req, res) {
         }
     })
 })
-app.get('/dnd-languages/database/*.zip', function(req, res) {
-    res.sendFile(req.url, {root:'.'});
+app.get('/dnd-languages/*.zip', function(req, res) {
+    res.sendFile("/database"+req.url, {root:'.'});
 })
-app.get('/dnd-languages/database/*.tflite', (req, res) => {
-    res.sendFile(req.url, {root:'.'});
+app.get('/dnd-languages/*.tflite', (req, res) => {
+    res.sendFile("/database"+req.url, {root:'.'});
     //Google analytics
 })
-app.get('/dnd-languages/database/*.png', (req, res) => {
-    res.sendFile(req.url, {root:'.'});
+app.get('/dnd-languages/*.png', (req, res) => {
+    res.sendFile("/database"+req.url, {root:'.'});
 })
 
 

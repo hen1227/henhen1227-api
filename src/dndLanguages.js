@@ -4,7 +4,7 @@ import PythonShell from 'python-shell';
 //Using edit-json-file for NodeJS, based off the NPM documentation for edit-file-json
 
 
-const databaseLocalPath = 'dnd-languages/database/';
+const databaseLocalPath = 'database/dnd-languages/';
 
 
 function decodeBase64Image(dest, dataString) {
