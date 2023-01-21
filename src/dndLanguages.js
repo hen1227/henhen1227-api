@@ -60,7 +60,6 @@ function trainAI(language) {
     });
 }
 
-
 export function dndLanguagesUpload(req, res) {
     let realJson = JSON.parse(Object.keys(req.body)[0] +Object.values(req.body)[0]);
     const files = fs.readdirSync(databaseLocalPath+realJson.language+'/'+realJson.letter+'/')
@@ -72,7 +71,7 @@ export function dndLanguagesUpload(req, res) {
     res.status(200).json({"Status": "Uploaded Successful!", "Message": "The "+letterExt.toString()+"th "+realJson.letter+" has been uploaded to the database" });
 }
 export function dndLanguagesGetCount(req, res) {
-    console.log("Get count: " + req.body)
+    console.log("Get count: " + req.body);
     let response = []
     const dir = fs.readdirSync(databaseLocalPath+req.body.language+'/')
     for (const symbol of dir){

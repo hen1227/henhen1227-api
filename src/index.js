@@ -15,7 +15,6 @@ let port = process.env.PORT || 80
 const corsWhitelist = ['http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
 const corsOptions = {
     origin: function (origin, callback) {
-        console.log(origin);
         if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true)
         } else {
@@ -62,7 +61,7 @@ app.post('/dnd-languages/getCount', bodyParser.urlencoded({ limit: "50mb", exten
 app.get('/dnd-languages/languages.json', function(req, res) {
     fs.readFile('database/dnd-languages/languages.json', (err, data) => {
         if(err){
-            console.log('Something went wrong');
+            console.log('Something went wrong getting languages.json');
             console.log(err);
             res.end("failed to load")
         } else {
@@ -135,14 +134,11 @@ app.post('/platform-climber/highscore', (req, res) => {
     }
 
     let value = platformClimberHighScores(true);
-    console.log(value);
-
     res.send(value);
 });
 
 app.get('/platform-climber/highscore', (req, res) => {
     let value = platformClimberHighScores(false);
-    console.log(value);
     res.send(value);
 });
 
