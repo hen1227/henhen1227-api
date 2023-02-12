@@ -1,4 +1,5 @@
 import os
+import sys
 
 import numpy as np
 from sklearn.model_selection import cross_val_predict
@@ -9,7 +10,7 @@ assert tf.__version__.startswith('2')
 from tflite_model_maker import model_spec
 from tflite_model_maker import image_classifier
 from tflite_model_maker.config import ExportFormat
-from tflite_model_maker.config import QuantizationConfig
+from tflite_model_makr.config import QuantizationConfig
 from tflite_model_maker.image_classifier import DataLoader
 
 import matplotlib.pyplot as plt
@@ -20,7 +21,10 @@ import json
 
 languages = []
 
-with open('C:\server/dnd-languages\database\languages.json', 'r+') as f:
+
+sourcePath = '..\database\dnd-languages/'
+
+with open(sourcePath + 'languages.json', 'r+') as f:
     data = json.load(f)
     # print(data)
     print("Languages listed in languages.json: ")
@@ -28,12 +32,12 @@ with open('C:\server/dnd-languages\database\languages.json', 'r+') as f:
         print(lang)
         languages.append(lang)
 
-language = prompt("What langauge? ")
+# language = prompt("What langauge? ")
+language = sys.argv[1]
 
 while not language in languages:
-    language = prompt("Didn't Recognize Language, try again: ")
+    language = prompt("Didn't Recognize Language `" + language"` , try again: ")
 
-sourcePath = 'C:\server/dnd-languages\database/'
 
 if not os.path.isdir(sourcePath+language+'/'):
     os.mkdir(sourcePath+language+'/')
@@ -71,10 +75,10 @@ model = image_classifier.create(train_data)
 
 loss, accuracy = model.evaluate(test_data)
 
-model.export(export_dir='C:/server/dnd-languages/database/', tflite_filename=language+'.tflite',)
+model.export(export_dir=sourcePath, tflite_filename=language+'.tflite',)
 
 
-with open('C:\server/dnd-languages\database\languages.json', 'r+') as f:
+with open(sourcePath + '\languages.json', 'r+') as f:
     data = json.load(f)
     data[language]['latestVersion'] += 1
     f.seek(0)

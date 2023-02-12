@@ -27,6 +27,7 @@
     "fs": "^0.0.1-security",
     "node-app-store-connect-api": "^4.0.0",
     "nodemon": "^2.0.20",
-    "python-shell": "^3.0.1"
+    "python-shell": "^3.0.1",
+    "socket.io": "^4.6.0"
   }
 }
