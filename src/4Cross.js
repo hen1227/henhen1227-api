@@ -82,7 +82,7 @@ Game.prototype.startGame = function(){
     })
 
     this.player2.on("acceptRematch", function(){
-        this.resetGame();
+        self.resetGame();
         self.serverIO.emit("startGame");
     })
 };
