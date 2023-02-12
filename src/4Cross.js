@@ -22,6 +22,7 @@ function Game(serverIO, gameCode) {
 
 Game.prototype.startGame = function(){
     const self = this
+
     this.player1.on("move", function (player, x1, y1, x2, y2){
         // console.log("Moved peice from p 1")
         self.move(player, x1, y1, x2, y2);
@@ -34,35 +35,35 @@ Game.prototype.startGame = function(){
 
 
     this.player1.on("resign", function (){
-        this.serverIO.emit("gameOver", 1);
+        self.serverIO.emit("gameOver", 1);
     })
 
     this.player1.on("offerDraw", function (){
-        this.serverIO.emit("offerDraw", 0);
+        self.serverIO.emit("offerDraw", 0);
     })
 
     this.player1.on("gameOver", function (player){
-        this.serverIO.emit("gameOver", player);
+        self.serverIO.emit("gameOver", player);
     })
 
     this.player1.on("disconnect", function (){
-        this.serverIO.emit("serverEnded");
+        self.serverIO.emit("serverEnded");
     })
 
     this.player2.on("resign", function (){
-        this.serverIO.emit("gameOver", 0);
+        self.serverIO.emit("gameOver", 0);
     })
 
     this.player2.on("offerDraw", function (){
-        this.serverIO.emit("offerDraw", 1);
+        self.serverIO.emit("offerDraw", 1);
     })
 
     this.player2.on("gameOver", function (player){
-        this.serverIO.emit("gameOver", player);
+        self.serverIO.emit("gameOver", player);
     })
 
     this.player2.on("disconnect", function (){
-        this.serverIO.emit("serverEnded");
+        self.serverIO.emit("serverEnded");
     })
 };
 
