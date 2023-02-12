@@ -1,14 +1,10 @@
 import { Server } from 'socket.io'
-import { createServer} from 'http';
-
 
 let io = null
 export let crossGames = []
 let openGame = null
 
-export function init4CrossServer(app){
-    const httpServer = createServer(app);
-
+export function init4CrossServer(httpServer){
     io = new Server(httpServer, {})
     addHandlers()
 }

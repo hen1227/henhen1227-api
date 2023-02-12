@@ -8,7 +8,10 @@ import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
 import cors from 'cors';
 
+import { createServer} from 'http';
+
 const app = express();
+const httpServer = createServer(app);
 
 let port = process.env.PORT || 80
 
@@ -149,7 +152,7 @@ app.get('/platform-climber/download', (req, res) => {
 
 import { init4CrossServer, crossGames } from "./4Cross.js";
 
-init4CrossServer(app);
+init4CrossServer(httpServer);
 
 app.get('/4Cross/gamesCount', (req, res) => {
     res.send( crossGames.length );
@@ -161,7 +164,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(port, function(){
+httpServer.listen(port, function(){
     console.log("Server started on port: "+port)
 });
 
