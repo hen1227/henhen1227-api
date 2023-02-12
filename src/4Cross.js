@@ -32,6 +32,7 @@ Game.prototype.startGame = function(){
         self.move(player, x1, y1, x2, y2);
     })
 
+
     this.player1.on("resign", function (){
         this.serverIO.emit("gameOver", 1);
     })
@@ -41,7 +42,11 @@ Game.prototype.startGame = function(){
     })
 
     this.player1.on("gameOver", function (){
+        this.serverIO.emit("gameOver");
+    })
 
+    this.player1.on("disconnect", function (){
+        this.serverIO.emit("serverEnded");
     })
 
     this.player2.on("resign", function (){
@@ -50,6 +55,14 @@ Game.prototype.startGame = function(){
 
     this.player2.on("offerDraw", function (){
         this.serverIO.emit("offerDraw", 0);
+    })
+
+    this.player2.on("gameOver", function (){
+        this.serverIO.emit("gameOver");
+    })
+
+    this.player2.on("disconnect", function (){
+        this.serverIO.emit("serverEnded");
     })
 };
 
@@ -119,9 +132,9 @@ const addToGame = function(socket){
 
         socket.emit("setPlayerNumber", 1)
 
-        openGame.serverIO.emit("playerJoined")
-
         socket.join(openGame.gameCode)
+
+        openGame.serverIO.emit("playerJoined")
 
         openGame.startGame()
 
