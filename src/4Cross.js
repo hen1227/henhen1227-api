@@ -18,8 +18,6 @@ function Game(serverIO, gameCode) {
 
     this.moveCount = 0
     this.currentTurn = 0
-
-    this.startGame();
 }
 
 Game.prototype.startGame = function(){
@@ -34,7 +32,6 @@ Game.prototype.startGame = function(){
 
         self.move(player, x1, y1, x2, y2);
     })
-
 
 
     this.player1.on("resign", function (){
@@ -54,7 +51,6 @@ Game.prototype.startGame = function(){
     })
 
     this.player1.on("requestRematch", function(){
-        console.log("Player 0 wants a rematch");
         self.serverIO.emit("requestRematch", 0);
     })
 
@@ -82,17 +78,16 @@ Game.prototype.startGame = function(){
     })
 
     this.player2.on("requestRematch", function(){
-        console.log("Player 0 wants a rematch");
         self.serverIO.emit("requestRematch", 1);
     })
 
     this.player2.on("acceptRematch", function(){
-        this.startGame();
+        this.resetGame();
         self.serverIO.emit("startGame");
     })
 };
 
-Game.prototype.startGame = function(){
+Game.prototype.resetGame = function(){
     this.moveCount = 0
     this.currentTurn = 0
 }
