@@ -154,7 +154,7 @@ app.get('/platform-climber/download', (req, res) => {
 
 import { init4CrossServer, crossGames } from "./4Cross.js";
 
-init4CrossServer();
+init4CrossServer(app);
 
 app.get('/4Cross/gamesCount', (req, res) => {
     res.send( crossGames.length );
