@@ -11,8 +11,6 @@ export function init4CrossServer(app){
 
     io = new Server(httpServer, {})
     addHandlers()
-
-    httpServer.listen(3000);
 }
 
 function Game(serverIO, gameCode) {
