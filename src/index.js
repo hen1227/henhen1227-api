@@ -155,9 +155,11 @@ import { init4CrossServer, crossGames } from "./4Cross.js";
 
 init4CrossServer();
 
+app.get('/4Cross/server');
+
 app.get('/4Cross/gamesCount', (req, res) => {
     res.send( crossGames.length );
-})
+});
 
 //MARK: MAIN
 app.get('*', (req, res) => {

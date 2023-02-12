@@ -6,7 +6,9 @@ export let crossGames = []
 let openGame = null
 
 export function init4CrossServer(app){
-    io = new Server(app)
+    io = new Server(app, {
+        path: "/4Cross/server"
+    })
     addHandlers()
 }
 
