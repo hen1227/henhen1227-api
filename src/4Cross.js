@@ -18,6 +18,8 @@ function Game(serverIO, gameCode) {
 
     this.moveCount = 0
     this.currentTurn = 0
+
+    this.startGame();
 }
 
 Game.prototype.startGame = function(){
@@ -32,6 +34,7 @@ Game.prototype.startGame = function(){
 
         self.move(player, x1, y1, x2, y2);
     })
+
 
 
     this.player1.on("resign", function (){
@@ -50,6 +53,18 @@ Game.prototype.startGame = function(){
         self.serverIO.emit("serverEnded");
     })
 
+    this.player1.on("requestRematch", function(){
+        console.log("Player 0 wants a rematch");
+        self.serverIO.emit("requestRematch", 0);
+    })
+
+    this.player1.on("acceptRematch", function(){
+        this.startGame();
+        self.serverIO.emit("startGame");
+    })
+
+    //****
+
     this.player2.on("resign", function (){
         self.serverIO.emit("gameOver", 0);
     })
@@ -65,7 +80,22 @@ Game.prototype.startGame = function(){
     this.player2.on("disconnect", function (){
         self.serverIO.emit("serverEnded");
     })
+
+    this.player2.on("requestRematch", function(){
+        console.log("Player 0 wants a rematch");
+        self.serverIO.emit("requestRematch", 1);
+    })
+
+    this.player2.on("acceptRematch", function(){
+        this.startGame();
+        self.serverIO.emit("startGame");
+    })
 };
+
+Game.prototype.startGame = function(){
+    this.moveCount = 0
+    this.currentTurn = 0
+}
 
 Game.prototype.move = function(player, x1, y1, x2, y2){
     console.log("Player ["+player+"] Wants to move ("+x1+","+y1+") to ("+x2+","+y2+")")
