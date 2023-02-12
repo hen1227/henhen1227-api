@@ -1,4 +1,5 @@
 import { Server } from 'socket.io'
+import { createServer} from 'http';
 
 
 let io = null
@@ -6,8 +7,12 @@ export let crossGames = []
 let openGame = null
 
 export function init4CrossServer(app){
-    io = new Server(app, {})
+    const httpServer = createServer(app);
+
+    io = new Server(httpServer, {})
     addHandlers()
+
+    httpServer.listen(3000);
 }
 
 function Game(serverIO, gameCode) {
