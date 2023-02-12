@@ -27,11 +27,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-
-app.listen(port, function(){
-    console.log("Server started on port: "+port)
-});
-
 //MARK: APP STORE API
 
 let appStoreApi = new AppStoreConnectApi();
@@ -163,6 +158,11 @@ app.get('/4Cross/gamesCount', (req, res) => {
 //MARK: MAIN
 app.get('/', (req, res) => {
 	res.sendFile('/src/index.html', {root:'.'});
+});
+
+
+app.listen(port, function(){
+    console.log("Server started on port: "+port)
 });
 
 
