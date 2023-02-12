@@ -41,8 +41,8 @@ Game.prototype.startGame = function(){
         this.serverIO.emit("offerDraw", 0);
     })
 
-    this.player1.on("gameOver", function (){
-        this.serverIO.emit("gameOver");
+    this.player1.on("gameOver", function (player){
+        this.serverIO.emit("gameOver", player);
     })
 
     this.player1.on("disconnect", function (){
@@ -54,11 +54,11 @@ Game.prototype.startGame = function(){
     })
 
     this.player2.on("offerDraw", function (){
-        this.serverIO.emit("offerDraw", 0);
+        this.serverIO.emit("offerDraw", 1);
     })
 
-    this.player2.on("gameOver", function (){
-        this.serverIO.emit("gameOver");
+    this.player2.on("gameOver", function (player){
+        this.serverIO.emit("gameOver", player);
     })
 
     this.player2.on("disconnect", function (){
