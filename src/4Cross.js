@@ -105,6 +105,7 @@ Game.prototype.move = function(player, x1, y1, x2, y2){
 
 Game.prototype.end = function (){
     this.serverIO.disconnectSockets();
+    crossGames = crossGames.filter(function(el) { return el !== this; });
 }
 
 Game.prototype.switchTurns = function(){
@@ -175,6 +176,10 @@ const addToGame = function(socket){
 const createNewGame = function(socket, gameCode) {
     let newGame = new Game(io, gameCode);
     newGame.player1 = socket
+
+    newGame.player1.on("disconnect", function () {
+        newGame.end()
+    })
 
     crossGames.push(newGame)
 }
