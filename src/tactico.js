@@ -199,7 +199,7 @@ const joinWithGameCode = function (socket, gameCode){
 
             console.log("Found game with matching Game Code")
 
-            console.log(game.serverIO)
+            // console.log(game.serverIO)
 
             foundGame = true
 
