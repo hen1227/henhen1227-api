@@ -185,9 +185,11 @@ const joinWithGameCode = function (socket, gameCode){
         const game = crossGames[i];
         console.log(game.gameCode);
         console.log(gameCode);
-        console.log("==__==");
 
         if(game.gameCode.trim() === gameCode.trim()){
+
+            console.log("Found game with matching Game Code")
+
             foundGame = true
 
             game.player2 = socket
