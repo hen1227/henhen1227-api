@@ -126,6 +126,10 @@ const addHandlers = function() {
             createNewGame(socket, desiredGameCode)
         })
 
+        socket.on("joinGameCode", function (desiredGameCode) {
+            joinWithGameCode(socket, desiredGameCode)
+        })
+
         socket.on("cancelSearch", function() {
             openGame.end()
         })
@@ -173,6 +177,31 @@ const createNewGame = function(socket, gameCode) {
     newGame.player1 = socket
 
     crossGames.push(newGame)
+}
+
+const joinWithGameCode = function (socket, gameCode){
+    let foundGame = false
+    for(let i = 0; i < crossGames.length; i++){
+        const game = crossGames[i];
+        if(game.gameCode === gameCode){
+            foundGame = true
+
+            game.player2 = socket
+
+            socket.emit("setPlayerNumber", 1)
+
+            socket.join(gameCode)
+
+            game.serverIO.emit("playerJoined")
+
+            game.startGame()
+
+            break;
+        }
+    }
+    if(!foundGame){
+        socket.emit("gameCodeNotFound");
+    }
 }
 
 const randomGameCode = function() {
