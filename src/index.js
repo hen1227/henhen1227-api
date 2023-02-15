@@ -150,7 +150,7 @@ app.get('/platform-climber/download', (req, res) => {
 
 //MARK: 4Cross
 
-import { init4CrossServer, crossGames } from "./4Cross.js";
+import { init4CrossServer, crossGames } from "./tactico.js";
 
 init4CrossServer(httpServer);
 

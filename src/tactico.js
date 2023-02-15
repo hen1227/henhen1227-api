@@ -139,7 +139,7 @@ const addHandlers = function() {
         })
 
         socket.onAny((event, args) => {
-            console.log(`received event: ${event}`);
+            console.log(`received event: ${event} with args: ${args}`);
         });
     })
 
@@ -198,7 +198,7 @@ const joinWithGameCode = function (socket, gameCode){
 
             console.log("Found game with matching Game Code")
 
-            console.log(game.socket)
+            console.log(game.player1)
             foundGame = true
 
             game.player2 = socket
