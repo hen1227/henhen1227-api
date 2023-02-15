@@ -179,7 +179,10 @@ const addToGame = function(socket){
 const createNewGame = function(socket, gameCode) {
     let newGame = new Game(io, gameCode);
     newGame.player1 = socket
+
     newGame.player1.join(gameCode)
+
+    newGame.player1.join("setPlayerNumber", 0)
 
     newGame.player1.on("disconnect", function () {
         newGame.end()
