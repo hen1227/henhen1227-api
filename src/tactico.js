@@ -198,7 +198,8 @@ const joinWithGameCode = function (socket, gameCode){
 
             console.log("Found game with matching Game Code")
 
-            console.log(game.player1)
+            console.log(game.serverIO)
+
             foundGame = true
 
             game.player2 = socket
