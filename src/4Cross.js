@@ -23,6 +23,9 @@ function Game(serverIO, gameCode) {
 Game.prototype.startGame = function(){
     const self = this
 
+    console.log("Game with code:" + self.gameCode)
+
+
     this.player1.on("move", function (player, x1, y1, x2, y2){
         // console.log("Moved peice from p 1")
         self.move(player, x1, y1, x2, y2);
@@ -195,6 +198,7 @@ const joinWithGameCode = function (socket, gameCode){
 
             console.log("Found game with matching Game Code")
 
+            console.log(game.socket)
             foundGame = true
 
             game.player2 = socket
