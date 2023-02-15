@@ -183,6 +183,10 @@ const joinWithGameCode = function (socket, gameCode){
     let foundGame = false
     for(let i = 0; i < crossGames.length; i++){
         const game = crossGames[i];
+        console.log(game.gameCode);
+        console.log(gameCode);
+        console.log("==__==");
+
         if(game.gameCode === gameCode){
             foundGame = true
 
