@@ -182,7 +182,7 @@ const createNewGame = function(socket, gameCode) {
 
     newGame.player1.join(gameCode)
 
-    newGame.player1.join("setPlayerNumber", 0)
+    newGame.player1.emit("setPlayerNumber", 0)
 
     newGame.player1.on("disconnect", function () {
         newGame.end()
