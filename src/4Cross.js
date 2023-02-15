@@ -187,7 +187,7 @@ const joinWithGameCode = function (socket, gameCode){
         console.log(gameCode);
         console.log("==__==");
 
-        if(game.gameCode === gameCode){
+        if(game.gameCode.trim() === gameCode.trim()){
             foundGame = true
 
             game.player2 = socket
