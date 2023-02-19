@@ -145,13 +145,13 @@ app.get('/platform-climber/highscore', (req, res) => {
 //MARK: Downloads
 
 app.get('/platform-climber/download', (req, res) => {
-    let path = `${__dirname}/downloads/PlatformClimber-0.1.1-mac.dmg`;
-    res.download(path);
+    let path = `/downloads/PlatformClimber-0.1.1-mac.dmg`;
+    res.download(path, {root:'.'});
 });
 
 app.get('/resume', (req, res) => {
-    let path = `${__dirname}/downloads/Resume(01-23).pdf`;
-    res.download(path);
+    let path = `/downloads/Resume(01-23).pdf`;
+    res.download(path, {root:'.'});
 });
 
 //MARK: 4Cross
