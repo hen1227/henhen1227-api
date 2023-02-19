@@ -142,9 +142,15 @@ app.get('/platform-climber/highscore', (req, res) => {
     res.send(value);
 });
 
+//MARK: Downloads
 
 app.get('/platform-climber/download', (req, res) => {
     let path = `${__dirname}/downloads/PlatformClimber-0.1.1-mac.dmg`;
+    res.download(path);
+});
+
+app.get('/resume', (req, res) => {
+    let path = `${__dirname}/downloads/Resume(01-23).pdf`;
     res.download(path);
 });
 
