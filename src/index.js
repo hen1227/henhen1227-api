@@ -4,7 +4,7 @@ import fs from "fs";
 import express from 'express';
 import Database from "easy-json-database";
 
-// import AppStoreConnectApi from "./appStoreConnectApi.js";
+import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
 import cors from 'cors';
 
