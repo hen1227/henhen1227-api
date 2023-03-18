@@ -84,11 +84,11 @@ app.get('/dnd-languages/*.png', (req, res) => {
 
 
 //MARK: PLATFORM CLIMBER
-const platformClimberDB = new Database("../database/platformClimber.json", {
+const platformClimberDB = new Database("/database/platformClimber.json", {
     snapshots: {
         enabled: true,
         interval: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-        folder: '../database/backups/'
+        folder: '/database/backups/'
     }
 });
 
