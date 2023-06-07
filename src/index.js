@@ -13,7 +13,7 @@ import { createServer} from 'http';
 const app = express();
 const httpServer = createServer(app);
 
-let port = process.env.PORT || 80
+let port = process.env.PORT || 4001
 
 
 const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
