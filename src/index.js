@@ -16,7 +16,7 @@ const httpServer = createServer(app);
 let port = process.env.PORT || 4001
 
 
-const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:3000', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
+const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:4001', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
 const corsOptions = {
     origin: function (origin, callback) {
         if (corsWhitelist.indexOf(origin) !== -1 || !origin) {
@@ -143,7 +143,6 @@ app.get('/platform-climber/highscore', (req, res) => {
 });
 
 //MARK: Downloads
-
 app.get('/platform-climber/download', (req, res) => {
     let path = `/downloads/PlatformClimber-0.1.1-mac.dmg`;
     res.download(path, {root:'.'});
@@ -151,6 +150,11 @@ app.get('/platform-climber/download', (req, res) => {
 
 app.get('/resume', (req, res) => {
     let path = `/downloads/Resume(01-23).pdf`;
+    res.download(path, {root:'.'});
+});
+
+app.get('/downloads/minecraft/originsModpack', (req, res) => {
+    let path = `/downloads/Henhen1227_Origins_Server.zip`;
     res.download(path, {root:'.'});
 });
 
