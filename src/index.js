@@ -1,22 +1,26 @@
 import bodyParser from "body-parser";
 import fs from "fs";
-
 import express from 'express';
 import Database from "easy-json-database";
-
 // import AppStoreConnectApi from "./appStoreConnectApi.js";
 import { dndLanguagesUpload, dndLanguagesGetCount } from "./dndLanguages.js";
 import cors from 'cors';
-
 import { createServer} from 'http';
+import minecraftRoutes from './minecraft/routes.js';
+import authRoutes from './auth/routes.js';
 
 const app = express();
+
+app.use('/minecraft', minecraftRoutes);
+app.use('/auth', authRoutes);
+
 const httpServer = createServer(app);
+
 
 let port = process.env.PORT || 4001
 
 
-const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:4001', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
+const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:3000', 'http://192.168.40.50:4001', 'http://localhost:4001', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
 const corsOptions = {
     origin: function (origin, callback) {
         if (corsWhitelist.indexOf(origin) !== -1 || !origin) {

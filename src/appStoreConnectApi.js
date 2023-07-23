@@ -41,7 +41,7 @@ class App {
             this.ratings.push(review.attributes.rating);
         }
     }
-    1227
+
     averageRating() {
         let totalRating = 0;
         for (let i = 0; i < this.ratings.length; i++) {
