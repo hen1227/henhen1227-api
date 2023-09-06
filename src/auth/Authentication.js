@@ -72,5 +72,5 @@ export function generateToken(user) {
 export function generateVerificationLink(user, forEmail){
     const token = jwt.sign({ user: user, isVerifyingEmail: forEmail, isVerifyingUsername: !forEmail }, process.env.JWT_SECRET);
     // return `https://api.henhen1227.com/auth/verify?token=${token}`
-    return `http://10.31.64.43:4001/auth/verify?token=${token}`
+    return `https://api.henhen1227.com/auth/verify?token=${token}`
 }
