@@ -58,7 +58,7 @@ router.delete('/club/:clubId', authenticateToken, async (req, res) => {
     const clubId = req.params.clubId;
 
     // First, let's retrieve the club to check if it exists
-    const club = await Club.findOne({ where: { id: clubId } });
+    const club = await Club.findByPk(clubId);
 
     if (!club) {
         return res.status(404).send({ error: 'Club not found' });
@@ -83,6 +83,57 @@ router.delete('/club/:clubId', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send({ error: 'Server error' });
+    }
+});
+
+// TODO: Test this in local environment
+// Invite Leader to Club
+router.post('/club/:clubId/inviteLeader', authenticateToken, async (req, res) => {
+    const clubId = req.params.clubId;
+    const userId = req.user.id;
+    const emailToBeAdded = req.body.email;
+
+    if(!userId || !emailToBeAdded){
+        return res.status(400).send({error: 'User ID and email are required!'});
+    }
+
+    try {
+        const club = await Club.findByPk(clubId);
+
+        if (!club) {
+            return res.status(404).send({error: 'Club not found'});
+        }
+
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            return res.status(404).send({error: 'User not found'});
+        }
+
+        const userToBeAdded = await User.findOne({where: {email: emailToBeAdded}});
+
+        if (!userToBeAdded) {
+            return res.status(404).send({error: 'That email doesn\'t have an account linked to it'});
+        }
+
+        if (userToBeAdded.email.indexOf('@sps.edu') === -1){
+            return res.status(400).send({error: 'Leaders require SPS emails'});
+        }
+
+        // Check if already leader
+        const isLeader = await club.hasLeader(userToBeAdded);
+        if (isLeader) {
+            return res.status(400).send({error: 'That user is already a leader of this club'});
+        }
+
+        // Add the user as a leader to the club
+        await club.addLeader(userToBeAdded);
+
+        res.status(200).send({message: 'Successfully added leader to the club'});
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({error: 'Server error'});
     }
 });
 
@@ -266,7 +317,16 @@ router.post('/:clubId/events', authenticateToken, requireSPSEmail, async (req, r
         });
 
         if (sendNotification) {
-            const formattedTime = new Date(datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateObj = new Date(datetime);
+            dateObj.setHours(dateObj.getHours() + 1);  // add one hour
+
+            // Extract day, month, hour, and minute
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1);
+            const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
+            // Combine them into desired format
+            const formattedTime = `${month}/${day} ${time}`;
             await sendNotificationToClubMembers(`${club.name}: ${title} at ${formattedTime}`, club.id);
         }
 
@@ -581,7 +641,7 @@ router.post('/sendVerificationEmail', authenticateToken, async (req, res) => {
             SPS Computer Science Club,<br>
             Henry Abrahamsen
         `;
-        const emailSubject = 'Please verify your email address'; // TODO: Edit to match app name
+        const emailSubject = 'SPS Now: Please verify your email address';
         await sendEmail(user.email, emailSubject, emailBody, true);
 
         res.status(200).json({ message: 'Verification email sent' });
