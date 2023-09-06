@@ -6,7 +6,7 @@ import {
     generateVerificationLink,
     requireSPSEmail
 } from "../auth/Authentication.js";
-import {sendNotificationToAllDevices, sendNotificationToClubMembers} from "./Notifications.js";
+import {sendNotificationToAllDevices, sendNotificationToClubMembers, sendNotificationTo} from "./Notifications.js";
 import {Op} from "sequelize";
 import {sendEmail} from "../util/SendEmail.js";
 
@@ -548,8 +548,7 @@ router.post('/saveDeviceToken', authenticateToken, async (req, res) => {
             platform: platform
         });
 
-        // Send a test notification
-        await sendNotificationToAllDevices('Test notification');
+        await sendNotificationTo("Welcome to SPS Now!", deviceToken, platform);
 
         res.status(200).json({ message: 'Device token saved successfully.' });
     } catch (error) {

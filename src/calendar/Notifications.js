@@ -54,6 +54,18 @@ function sendToAPNs(deviceToken, message) {
     });
 }
 
+export async function sendNotificationTo(message, token, platform) {
+    try {
+        if(platform === 'ios') {
+            await sendToAPNs(token, message);
+        } else if (platform === 'Android') {
+            await sendToFCM(token, message);
+        }
+    } catch (error) {
+        console.error('Error sending notifications:', error);
+    }
+}
+
 export async function sendNotificationToAllDevices(message) {
     try {
         const tokens = await DeviceToken.findAll();
