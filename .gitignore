@@ -1,2 +1,4 @@
 /database/
 /downloads/
+.secrets
+.env

@@ -1,12 +1,10 @@
-import { Server } from 'socket.io'
-
-let io = null
-export let crossGames = []
+export let tacticoGames = []
 let openGame = null
+let io;
 
-export function init4CrossServer(httpServer){
-    io = new Server(httpServer, {})
-    addHandlers()
+export function startTacticoServer(ioServer){
+    io = ioServer;
+    addHandlers();
 }
 
 function Game(serverIO, gameCode) {
@@ -108,7 +106,7 @@ Game.prototype.move = function(player, x1, y1, x2, y2){
 
 Game.prototype.end = function (){
     this.serverIO.disconnectSockets();
-    crossGames = crossGames.filter(function(el) { return el !== this; });
+    tacticoGames = tacticoGames.filter(function(el) { return el !== this; });
 }
 
 Game.prototype.switchTurns = function(){
@@ -156,7 +154,7 @@ const addToGame = function(socket){
 
         socket.emit("setPlayerNumber", 0)
 
-        crossGames.push(openGame)
+        tacticoGames.push(openGame)
 
         socket.join(openGame.gameCode)
     }else{
@@ -188,13 +186,13 @@ const createNewGame = function(socket, gameCode) {
         newGame.end()
     })
 
-    crossGames.push(newGame)
+    tacticoGames.push(newGame)
 }
 
 const joinWithGameCode = function (socket, gameCode){
     let foundGame = false
-    for(let i = 0; i < crossGames.length; i++){
-        const game = crossGames[i];
+    for(let i = 0; i < tacticoGames.length; i++){
+        const game = tacticoGames[i];
         console.log(game.gameCode);
         console.log(gameCode);
 
