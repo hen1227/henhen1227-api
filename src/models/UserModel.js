@@ -20,7 +20,6 @@ const UserModel = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     },
-
     subscribedClubs: {
         type: DataTypes.VIRTUAL,
     },
@@ -30,29 +29,7 @@ const UserModel = sequelize.define('User', {
     calendarPreferences: {
         type: DataTypes.JSON,
         allowNull: true
-    },
-    username: {
-        type: DataTypes.STRING,
-        unique: false,
-        allowNull: true
-    },
-    isUsernameVerified: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    },
-    isOp: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-    },
-    points: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
-    },
-    mcUUID: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: true
-    },
+    }
 });
 
 export default UserModel;
