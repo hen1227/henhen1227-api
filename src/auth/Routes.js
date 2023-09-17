@@ -145,14 +145,15 @@ router.get('/verify', (req, res) => {
 
         if(tokenData.user && tokenData.minecraftAcount) {
             try {
-                await MinecraftAccount.update({ userId: tokenData.user.id, isVerified: true }, {where: { uuid: tokenData.minecraftAcount.uuid }});
+                await MinecraftAccount.update({ userId: tokenData.user, isVerified: true }, {where: { id: tokenData.minecraftAcount }});
                 res.send("<h1>Your username has been verified!</h1>");
             } catch (error) {
                 return res.status(500).json({error: `ERROR: ${error.message}`});
             }
         }else if(tokenData.user){
+            console.log(tokenData)
             try {
-                await User.update({isVerified: true}, {where: {id: tokenData.user.id}});
+                await User.update({isVerified: true}, {where: {id: tokenData.user}});
                 res.send("<h1>Your account email has been verified!</h1>");
             } catch (error) {
                 return res.status(500).json({error: `ERROR: ${error.message}`});
