@@ -3,7 +3,7 @@ import sequelize from "./Sequelize.js";
 
 const PurchaseModel = sequelize.define('Purchase', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    userId: DataTypes.INTEGER,
+    mcId: DataTypes.INTEGER,
     itemId: DataTypes.INTEGER,
     status: DataTypes.STRING,
     location: DataTypes.JSON,

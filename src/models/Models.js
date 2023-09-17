@@ -1,6 +1,7 @@
 import UserModel from './UserModel.js';
 import DeviceTokenModel from './DeviceTokenModel.js';
 import MinecraftEventModel from './MinecraftEventModel.js';
+import MinecraftAccountModel from "./MinecraftAccountModel.js";
 import PurchaseModel from './PurchaseModel.js';
 import ShopItemModel from './ShopItemModel.js';
 import GameWinModel from "./GameWinModel.js";
@@ -14,6 +15,7 @@ import ClubEventModel from "./ClubEventModel.js";
 export const Purchase = PurchaseModel
 export const GameWin = GameWinModel
 export const MinecraftEvent = MinecraftEventModel
+export const MinecraftAccount = MinecraftAccountModel
 export const Club = ClubModel
 export const ClubEvent = ClubEventModel
 export const ShopItem = ShopItemModel
@@ -23,14 +25,14 @@ export const FundingPayment = FundingPaymentModel
 export const FundingCost = FundingCostModel
 export const FundingTotal = FundingTotalModel
 
-User.hasMany(Purchase, { foreignKey: 'userId' });
-Purchase.belongsTo(User, { foreignKey: 'userId' });
+MinecraftAccount.hasMany(Purchase, { foreignKey: 'mcId' });
+Purchase.belongsTo(MinecraftAccount, { foreignKey: 'mcId' });
 
 ShopItem.hasMany(Purchase, { foreignKey: 'itemId'});
 Purchase.belongsTo(ShopItem, { foreignKey: 'itemId' });
 
-User.hasMany(GameWin, { foreignKey: 'userId' });
-GameWin.belongsTo(User, { foreignKey: 'userId' });
+MinecraftAccount.hasMany(GameWin, { foreignKey: 'mcId' });
+GameWin.belongsTo(MinecraftAccount, { foreignKey: 'mcId' });
 
 
 User.hasMany(FundingPayment, { foreignKey: 'userId' });

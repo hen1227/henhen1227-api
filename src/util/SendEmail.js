@@ -1,7 +1,4 @@
-import  jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-import {generateVerificationLink} from "../auth/Authentication.js";
 
 const EMAIL_ADDRESS = process.env.EMAIL_USER;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;

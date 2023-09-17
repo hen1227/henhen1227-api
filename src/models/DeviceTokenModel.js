@@ -24,7 +24,7 @@ const DeviceTokenModel = sequelize.define('DeviceToken', {
         allowNull: false
     },
     platform: {
-        type: DataTypes.ENUM('iOS', 'Android'),
+        type: DataTypes.ENUM('iOS', 'Android', 'web'),
     }
 });
 

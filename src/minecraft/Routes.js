@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-import {Purchase, ShopItem, User, GameWin, FundingCost} from "../models/Models.js";
+import {Purchase, ShopItem, User, GameWin, FundingCost, MinecraftAccount} from "../models/Models.js";
 import { DataTypes, Op } from "sequelize";
 import cron from "node-cron";
 import jwt from "jsonwebtoken";
-import {authenticateMinecraftServer, authenticateToken, generateVerificationLink} from "../auth/Authentication.js";
+import {authenticateMinecraftServer, authenticateToken, generateMinecraftVerificationLink} from "../auth/Authentication.js";
 import {minecraftServerSocket} from "./SocketHandler.js";
 import fs from "fs";
 import updateDailyCostToDatabase from "./CostCalculator.js";
@@ -16,22 +16,46 @@ router.post('/playerJoined', authenticateMinecraftServer, async (req, res) => {
     const username = req.body.username;
     const uuid = req.body.uuid;
     const isOp = req.body.isOp;
-    console.log("Player joined: " + username);
+
+    // Validate that the necessary data was provided
+    if (!username || !uuid) {
+        return res.status(400).json({ error: "Required data missing" });
+    }
+
     // Fetch the user from the database
     try {
-        const user = await User.findOne({ where: { username: username } });
+        const minecraftAccount = await MinecraftAccount.findOne({ where: { uuid: uuid } });
+
+        console.log(minecraftAccount)
 
         // If the user doesn't exist, return a message
-        if (!user) {
-            return res.send("You do not yet have an mc.henhen1227.com account linked to this account. Create one at https://mc.henhen1227.com/register");
+        if (!minecraftAccount) {
+            console.log("Creating account")
+            // Create Minecraft Account entry
+            MinecraftAccount.create({ username: username, uuid: uuid, isOp: isOp });
+
+            return res.send("Account Created!");
+            // return res.send("You do not yet have a mc.henhen1227.com account linked to this account. Create one at https://mc.henhen1227.com/register");
         }
 
-        User.update({ mcUUID: uuid }, { where: { username: username } });
-        User.update({ isOp: isOp }, { where: { username: username } });
+        MinecraftAccount.update({ username: username, isOp: isOp }, { where: { uuid: uuid } })
+
+        if(!minecraftAccount.userId){
+            // No Account linked
+            return res.send('No Account linked');
+        }
+
+        const user = await User.findOne({ where: { id: minecraftAccount.userId } });
+
+        if(!user){
+            // No Account linked
+            MinecraftAccount.update({ userId: null, isVerified: false }, { where: { uuid: uuid } })
+            return res.send('No account linked');
+        }
 
         // If the user exists but is not verified, generate a verification link and return it
-        if (!user.isVerified) {
-            const confirmationLink = generateAuthenticationToken(user.username)
+        if (!minecraftAccount.isVerified) {
+            const confirmationLink = generateMinecraftVerificationLink(user.id, minecraftAccount.id)
             return res.send("Your account isn't verified. To verify it, please go to this link: " + confirmationLink + "");
         }
 
@@ -44,11 +68,12 @@ router.post('/playerJoined', authenticateMinecraftServer, async (req, res) => {
 
 router.post('/points', authenticateMinecraftServer, async (req, res) => {
     try {
+        console.log(req.body)
         if (!req.body.username || !req.body.points){
             return res.status(400).send({message: "Missing username or points"});
         }
         // Add points to the player's existing points
-        await User.increment('points', { by: req.body.points, where: { username: req.body.username } });
+        await MinecraftAccount.increment('points', { by: req.body.points, where: { username: req.body.username } });
         console.log(`Points have been updated for ${req.body.username}`);
         return res.send({ message: 'Points updated' });
     } catch (error) {
@@ -57,7 +82,50 @@ router.post('/points', authenticateMinecraftServer, async (req, res) => {
     }
 });
 
-router.post('/gameWins', authenticateMinecraftServer, async (req, res) => {
+router.get('/points/:username', async (req, res) => {
+    let username = req.params.username;
+    if (!username) {
+        return res.status(400).send({message: "Missing username"});
+    }
+
+    try {
+        const player = await MinecraftAccount.findOne({ where: { username: username } });
+        if(!player){
+            return res.status(404).send({message: "Player not found", points: -404});
+        }
+
+        return res.status(200).send({points: player.points});
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send();
+    }
+});
+
+router.get('/players', async (req, res) => {
+    try {
+        // Include game wins that have mcId = ,
+        const players = await MinecraftAccount.findAll({
+            attributes: ['username', 'uuid', 'isOp', 'points', 'isVerified', 'userId'],
+            include: [
+                {
+                    model: GameWin,
+                    attributes: ['gameType', 'count']
+                }
+            ]
+        });
+
+        console.log(players)
+
+        // attributes: ['username', 'uuid', 'isOp', 'isVerified', 'userId']
+        res.json(players);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred while fetching players' });
+    }
+});
+
+router.post('/gameWin', authenticateMinecraftServer, async (req, res) => {
+    console.log(req.body)
     try {
         const { username, gameType } = req.body;
 
@@ -67,15 +135,16 @@ router.post('/gameWins', authenticateMinecraftServer, async (req, res) => {
         }
 
         // Check if the user exists
-        const user = await User.findOne({ where: { username: username } });
+        const minecraftAccount = await MinecraftAccount.findOne({ where: { username: username } });
 
-        if (!user) {
+        if (!minecraftAccount) {
+            console.log("User not found");
             return res.status(404).json({ error: "User not found" });
         }
 
         // Fetch or create the game wins record for this user and game type
         const [record, created] = await GameWin.findOrCreate({
-            where: { userId: user.id, gameType },
+            where: { mcId: minecraftAccount.id, gameType },
             defaults: { count: 0 }
         });
 
@@ -85,7 +154,6 @@ router.post('/gameWins', authenticateMinecraftServer, async (req, res) => {
         }
 
         res.status(200).json({ success: true, message: "Win recorded successfully" });
-
     } catch (error) {
         console.error("Error recording win:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -322,7 +390,6 @@ router.post('/costOfDay', (req, res) => {
         });
     });
 });
-
 
 cron.schedule('0 0 * * *', async () => { // this runs every day at midnight
     // Daily discounts

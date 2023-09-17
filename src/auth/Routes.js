@@ -4,15 +4,21 @@ import jwt from "jsonwebtoken";
 import express from "express";
 import User from "../models/UserModel.js";
 import {authenticateToken, generateToken} from "./Authentication.js";
-import {Club} from "../models/Models.js";
+import {Club, MinecraftAccount} from "../models/Models.js";
 import {DataTypes} from "sequelize";
 
 dotenv.config();
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-    const email = req.body.email.toLowerCase();
+    let email = req.body.email;
     const password = req.body.password;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Missing email or password' });
+    }
+
+    email = email.toLowerCase();
 
     try {
         const prevEmailUser = await User.findOne({ where: { email: email } });
@@ -40,8 +46,14 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const email = req.body.email.toLowerCase();
+    let email = req.body.email;
     const password = req.body.password;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Missing email or password' });
+    }
+
+    email = email.toLowerCase();
 
     try {
         const user = await User.findOne({ where: { email: email } });
@@ -130,19 +142,20 @@ router.get('/verify', (req, res) => {
         if (err) {
             return res.status(403).json({ message: 'Invalid or expired token' });
         }
-        if(tokenData.isVerifyingUsername) {
+
+        if(tokenData.user && tokenData.minecraftAcount) {
             try {
-                await User.update({isUsernameVerified: true}, {where: {username: tokenData.user.username}});
-                res.send("Your username has been verified!");
+                await MinecraftAccount.update({ userId: tokenData.user.id, isVerified: true }, {where: { uuid: tokenData.minecraftAcount.uuid }});
+                res.send("<h1>Your username has been verified!</h1>");
             } catch (error) {
-                return res.status(500).json({error: error.message});
+                return res.status(500).json({error: `ERROR: ${error.message}`});
             }
-        }else if(tokenData.isVerifyingEmail){
+        }else if(tokenData.user){
             try {
-                await User.update({isVerified: true}, {where: {email: tokenData.user.email}});
-                res.send("Your account email has been verified!");
+                await User.update({isVerified: true}, {where: {id: tokenData.user.id}});
+                res.send("<h1>Your account email has been verified!</h1>");
             } catch (error) {
-                return res.status(500).json({error: error.message});
+                return res.status(500).json({error: `ERROR: ${error.message}`});
             }
         }
     });

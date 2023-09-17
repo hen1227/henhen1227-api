@@ -7,6 +7,7 @@ import minecraftSocketHandler from './minecraft/SocketHandler.js';
 import authRoutes from './auth/Routes.js';
 import dndRoutes from './dnd-languages/Routes.js';
 import calendarRoutes from './calendar/Routes.js';
+import clubInvitationRoutes from './club-invitation/Routes.js';
 import { startTacticoServer, tacticoGames } from "./tactico/Tactico.js";
 import { Server } from 'socket.io'
 import WebSocket, { WebSocketServer } from 'ws';
@@ -25,6 +26,7 @@ app.use('/minecraft', minecraftRoutes);
 app.use('/auth', authRoutes);
 app.use('/dnd-languages', dndRoutes);
 app.use('/calendar', calendarRoutes);
+app.use('/club-invitation', clubInvitationRoutes);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {});
@@ -81,7 +83,7 @@ app.get('/', (req, res) => {
 });
 
 
-sequelize.sync({ force: false, alter: false })
+sequelize.sync({ force: false, alter: true })
     .then(() => {
         console.log('All tables have been successfully created, if they didn\'t already exist');
         // Only start the server after the sync has completed

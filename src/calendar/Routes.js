@@ -3,7 +3,7 @@ import {Club, ClubEvent, DeviceToken, User} from "../models/Models.js";
 import {
     authenticateToken,
     authenticateTokenButNotRequired,
-    generateVerificationLink,
+    generateEmailVerificationLink,
     requireSPSEmail
 } from "../auth/Authentication.js";
 import {sendNotificationToAllDevices, sendNotificationToClubMembers, sendNotificationTo} from "./Notifications.js";
@@ -86,7 +86,6 @@ router.delete('/club/:clubId', authenticateToken, async (req, res) => {
     }
 });
 
-// TODO: Test this in local environment
 // Invite Leader to Club
 router.post('/club/:clubId/inviteLeader', authenticateToken, async (req, res) => {
     const clubId = req.params.clubId;
@@ -632,7 +631,7 @@ router.post('/sendVerificationEmail', authenticateToken, async (req, res) => {
         }
 
         // Send verification email
-        const verificationLink = generateVerificationLink(user, true);
+        const verificationLink = generateEmailVerificationLink(user.id);
         const emailBody = `
             Hi ${user.email},<br><br>
             Please click on the link below to verify your email address:<br><br>

@@ -3,10 +3,10 @@ import sequelize from "./Sequelize.js";
 import { User } from './Models.js';
 
 const GameWinModel = sequelize.define('GameWins', {
-    userId: {
+    mcId: {
         type: DataTypes.INTEGER,
         references: {
-            model: 'User',
+            model: 'MinecraftAccounts',
             key: 'id'
         },
         allowNull: false

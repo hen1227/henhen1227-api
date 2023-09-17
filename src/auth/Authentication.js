@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 export function authenticateMinecraftServer(req, res, next) {
+    console.log("Authenticating Minecraft server")
     const apiKey = req.headers['x-api-key'];
     if (apiKey == null || apiKey !== process.env.MC_SERVER_API_KEY) {
         return res.sendStatus(401);  // Unauthorized
@@ -11,6 +12,7 @@ export function authenticateMinecraftServer(req, res, next) {
 export function authenticateMinecraftWs(ws, req, handler) {
     const apiKey = req.headers['x-api-key'];
     if (apiKey !== process.env.MC_SERVER_API_KEY) {
+        ws.send(JSON.stringify({ type: 'error', message: 'Invalid API key', origin: 'server' }));
         ws.close();  // Close the connection if authentication fails
     } else {
         handler(ws, req);  // Pass the connection to the handler if authentication succeeds
@@ -69,8 +71,12 @@ export function generateToken(user) {
     };
 }
 
-export function generateVerificationLink(user, forEmail){
-    const token = jwt.sign({ user: user, isVerifyingEmail: forEmail, isVerifyingUsername: !forEmail }, process.env.JWT_SECRET);
-    // return `https://api.henhen1227.com/auth/verify?token=${token}`
+export function generateEmailVerificationLink(userId){
+    const token = jwt.sign({ user: userId }, process.env.JWT_SECRET);
+    return `https://api.henhen1227.com/auth/verify?token=${token}`
+}
+
+export function generateMinecraftVerificationLink(mcAccountId, userId){
+    const token = jwt.sign({ user: userId, minecraftAcount: mcAccountId }, process.env.JWT_SECRET);
     return `https://api.henhen1227.com/auth/verify?token=${token}`
 }
