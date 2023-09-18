@@ -1,14 +1,13 @@
 import { Sequelize } from 'sequelize';
 
-// const sequelize = new Sequelize({
-//     storage: './database/SQLiteDatabase.sqlite',
-//     dialect: 'sqlite',
-// });
+const database = process.env.POSTGRES_DATABASE;
+const username = process.env.POSTGRES_USERNAME;
+const password = process.env.POSTGRES_PASSWORD;
 
 const sequelize = new Sequelize({
-    database: process.env.POSTGRES_DATABASE,
-    username: process.env.POSTGRES_USERNAME,
-    password: process.env.POSTGRES_PASSWORD,
+    database: database,
+    username: username,
+    password: password,
     host: 'localhost',
     port: 5432, // default port for PostgreSQL, change if yours is different
     dialect: 'postgres',

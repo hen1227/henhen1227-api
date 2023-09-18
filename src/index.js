@@ -1,5 +1,6 @@
-import express from 'express';
+import 'dotenv/config';
 
+import express from 'express';
 import cors from 'cors';
 import { createServer} from 'http';
 import minecraftRoutes from './minecraft/Routes.js';
@@ -15,8 +16,7 @@ import WebSocket, { WebSocketServer } from 'ws';
 import sequelize from "./models/Sequelize.js";
 import {authenticateMinecraftWs} from "./auth/Authentication.js";
 
-
-let port = process.env.PORT || 4001
+let port = process.env.PORT || 4001;
 const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:3000', 'http://192.168.40.50:4001', 'http://localhost:4001', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
 const wss = new WebSocketServer({ noServer: true });
 const app = express();
@@ -60,7 +60,6 @@ wss.on('connection', (ws, request) => {
 });
 
 
-
 //MARK: Downloads
 app.get('/platform-climber/download', (req, res) => {
     let path = `/downloads/PlatformClimber-0.1.1-mac.dmg`;
@@ -81,7 +80,6 @@ app.get('/downloads/minecraft/originsModpack', (req, res) => {
 app.get('/', (req, res) => {
 	res.sendFile('/src/index.html', {root:'.'});
 });
-
 
 sequelize.sync({ force: false, alter: true })
     .then(() => {
