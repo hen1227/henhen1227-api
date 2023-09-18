@@ -6,9 +6,9 @@ import { Sequelize } from 'sequelize';
 // });
 
 const sequelize = new Sequelize({
-    database: process.env.POSTGRES_DATABASE || 'postgres',
-    username: process.env.POSTGRES_USERNAME || 'postgres',
-    password: process.env.POSTGRES_PASSWORD || 'password',
+    database: process.env.POSTGRES_DATABASE,
+    username: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
     host: 'localhost',
     port: 5432, // default port for PostgreSQL, change if yours is different
     dialect: 'postgres',
