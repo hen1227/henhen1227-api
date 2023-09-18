@@ -630,18 +630,7 @@ router.post('/sendVerificationEmail', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        // Send verification email
-        const verificationLink = generateEmailVerificationLink(user.id);
-        const emailBody = `
-            Hi ${user.email},<br><br>
-            Please click on the link below to verify your email address:<br><br>
-            <a href="${verificationLink}">Click here to verify account!</a><br><br>
-            Thanks,<br>
-            SPS Computer Science Club,<br>
-            Henry Abrahamsen
-        `;
-        const emailSubject = 'SPS Now: Please verify your email address';
-        await sendEmail(user.email, emailSubject, emailBody, true);
+        await sendVerificationEmail(user);
 
         res.status(200).json({ message: 'Verification email sent' });
     } catch (error) {
@@ -649,5 +638,20 @@ router.post('/sendVerificationEmail', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Internal server error.' });
     }
 });
+
+export async function sendVerificationEmail(user) {
+    // Send verification email
+    const verificationLink = generateEmailVerificationLink(user.id);
+    const emailBody = `
+            Hi ${user.email},<br><br>
+            Please click on the link below to verify your email address:<br><br>
+            <a href="${verificationLink}">Click here to verify account!</a><br><br>
+            Thanks,<br>
+            SPS Computer Science Club,<br>
+            Henry Abrahamsen
+        `;
+    const emailSubject = 'SPS Now: Please verify your email address';
+    await sendEmail(user.email, emailSubject, emailBody, true);
+}
 
 export default router;

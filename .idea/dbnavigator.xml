@@ -12,8 +12,8 @@
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="4ec90d47-1910-4716-8ac0-40d1e922763d">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
+    <connection id="51c7ba12-560c-4df9-9f79-a2f2b1980ce8">
+      <console name="postgres" type="STANDARD" schema="postgres" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -23,9 +23,7 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="4ec90d47-1910-4716-8ac0-40d1e922763d" dataset="main.ClubEvents" active-filter-id="" />
-    <filter-actions connection-id="4ec90d47-1910-4716-8ac0-40d1e922763d" dataset="main.Clubs" active-filter-id="" />
-    <filter-actions connection-id="4ec90d47-1910-4716-8ac0-40d1e922763d" dataset="main.GameWins" active-filter-id="" />
+    <filter-actions connection-id="51c7ba12-560c-4df9-9f79-a2f2b1980ce8" dataset="public.ClubLeaders" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
@@ -44,28 +42,25 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="4ec90d47-1910-4716-8ac0-40d1e922763d" active="true" signed="true">
+      <connection id="51c7ba12-560c-4df9-9f79-a2f2b1980ce8" active="true" signed="true">
         <database>
-          <name value="Connection" />
+          <name value="postgres" />
           <description value="" />
-          <database-type value="SQLITE" />
+          <database-type value="POSTGRES" />
           <config-type value="BASIC" />
-          <database-version value="3.41" />
+          <database-version value="16.0" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
-          <url-type value="FILE" />
-          <host value="" />
-          <port value="" />
-          <database value="" />
+          <url-type value="DATABASE" />
+          <host value="localhost" />
+          <port value="5432" />
+          <database value="postgres" />
           <tns-folder value="" />
           <tns-profile value="" />
-          <files>
-            <file path="$PROJECT_DIR$/database/SQLiteDatabase.sqlite" schema="main" />
-          </files>
-          <type value="NONE" />
-          <user value="" />
-          <deprecated-pwd value="" />
+          <type value="USER_PASSWORD" />
+          <user value="postgres" />
+          <deprecated-pwd value="VHJhZmFsZ2FyRGF0YWJhc2U=" />
         </database>
         <properties>
           <auto-commit value="false" />
