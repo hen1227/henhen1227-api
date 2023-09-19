@@ -36,7 +36,7 @@ const apnProvider = new apn.Provider({
         keyId: "5QP84X4Q4V",
         teamId: "5BHAWQJGY5"
     },
-    production: true // set to true when in production environment
+    production: process.env.PRODUCTION_ENVIRONMENT // set to true when in production environment
 });
 
 function sendToAPNs(deviceToken, message) {
