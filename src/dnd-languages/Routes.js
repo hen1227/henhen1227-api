@@ -20,14 +20,14 @@ router.get('/languages.json', function(req, res) {
     })
 })
 router.get('/*.zip', function(req, res) {
-    res.sendFile("/database"+req.url, {root:'.'});
+    res.sendFile("/database/dnd-languages"+req.url, {root:'.'});
 })
 router.get('/*.tflite', (req, res) => {
-    res.sendFile("/database"+req.url, {root:'.'});
+    res.sendFile("/database/dnd-languages"+req.url, {root:'.'});
     //Google analytics
 })
 router.get('/*.png', (req, res) => {
-    res.sendFile("/database"+req.url, {root:'.'});
+    res.sendFile("/database/dnd-languages"+req.url, {root:'.'});
 })
 
 
