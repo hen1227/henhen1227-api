@@ -6,7 +6,7 @@ import {
     generateEmailVerificationLink,
     requireSPSEmail
 } from "../auth/Authentication.js";
-import {sendNotificationToAllDevices, sendNotificationToClubMembers, sendNotificationTo} from "./Notifications.js";
+import { sendNotificationToClubMembers, sendNotificationTo } from "./Notifications.js";
 import {Op} from "sequelize";
 import {sendEmail} from "../util/SendEmail.js";
 
@@ -80,6 +80,49 @@ router.delete('/club/:clubId', authenticateToken, async (req, res) => {
         await club.destroy();
 
         res.status(200).send({ message: 'Club deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'Server error' });
+    }
+});
+
+// Edit club
+router.post('/club/:clubId', authenticateToken, async (req, res) => {
+    try {
+        const clubId = req.params.clubId;
+        const {name, description, color} = req.body;
+        const userObject = req.user;
+
+        console.log(req.body);
+
+        if (!name || !description || !color) {
+            return res.status(400).send({error: 'All fields are required!'});
+        }
+
+        // Check if club exists
+        const club = await Club.findByPk(clubId);
+
+        if (!club) {
+            return res.status(404).send({error: 'Club not found'});
+        }
+
+        // Check if the authenticated user is a leader of the club
+        const user = await User.findOne({where: {email: userObject.email}});
+
+        const isLeader = await club.hasLeader(user);
+        if (!isLeader) {
+            return res.status(403).send({ error: 'You are not authorized to update this club' });
+        }
+
+        // Update the club
+        await club.update({
+            name,
+            description,
+            color
+        });
+
+        res.status(200).send({ message: 'Club updated successfully' });
+
     } catch (error) {
         console.error(error);
         res.status(500).send({ error: 'Server error' });
@@ -448,41 +491,6 @@ router.post('/:clubId/unsubscribe', authenticateToken, async function (req, res)
     }
 });
 
-// Subscribe to club
-router.post('/:clubId/addLeader', authenticateToken, async function (req, res) {
-    const clubId = req.params.clubId;
-    const userId = req.body.id;
-
-    if (!userId) {
-        return res.status(400).send({error: 'User not found!'});
-    }
-
-    try {
-        // Fetch the club and user from the database
-        const club = await Club.findByPk(clubId);
-        const user = await User.findByPk(userId);
-
-        if (!club) {
-            return res.status(404).send({error: 'Club not found'});
-        }
-
-        if (!user) {
-            return res.status(404).send({error: 'User not found'});
-        }
-
-        if (user.email.indexOf('@sps.edu') !== -1){
-            return res.status(400).send({error: 'Leaders require SPS emails'});
-        }
-
-        // Add the user as a subscriber to the club
-        await club.addSubscriber(user);
-
-        res.status(200).send({message: 'Successfully subscribed to the club'});
-    } catch (error) {
-        res.status(500).send({error: 'Server error'});
-    }
-});
-
 // Get all clubs, events, and subscriptions
 router.get('/allData', authenticateTokenButNotRequired, async (req, res) => {
     try {
@@ -494,6 +502,20 @@ router.get('/allData', authenticateTokenButNotRequired, async (req, res) => {
                 }
             }
         });
+    } catch (error) {
+        console.log(error);
+    }
+
+    // Destroy all clubs that don't have a leader
+    try {
+        const allClubs = await Club.findAll();
+        for (let i = 0; i < allClubs.length; i++) {
+            const club = allClubs[i];
+            const leaders = await club.getLeaders();
+            if (leaders.length === 0) {
+                await club.destroy();
+            }
+        }
     } catch (error) {
         console.log(error);
     }

@@ -5,9 +5,9 @@ import bodyParser from "body-parser";
 
 const router = express.Router();
 
-router.post('/dnd-languages/upload', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesUpload(req, res))
-router.post('/dnd-languages/getCount', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesGetCount(req, res))
-router.get('/dnd-languages/languages.json', function(req, res) {
+router.post('/upload', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesUpload(req, res))
+router.post('/getCount', bodyParser.urlencoded({ limit: "50mb", extended: false }), (req, res) => dndLanguagesGetCount(req, res))
+router.get('/languages.json', function(req, res) {
     fs.readFile('database/dnd-languages/languages.json', (err, data) => {
         if(err){
             console.log('Something went wrong getting languages.json');
@@ -19,14 +19,14 @@ router.get('/dnd-languages/languages.json', function(req, res) {
         }
     })
 })
-router.get('/dnd-languages/*.zip', function(req, res) {
+router.get('/*.zip', function(req, res) {
     res.sendFile("/database"+req.url, {root:'.'});
 })
-router.get('/dnd-languages/*.tflite', (req, res) => {
+router.get('/*.tflite', (req, res) => {
     res.sendFile("/database"+req.url, {root:'.'});
     //Google analytics
 })
-router.get('/dnd-languages/*.png', (req, res) => {
+router.get('/*.png', (req, res) => {
     res.sendFile("/database"+req.url, {root:'.'});
 })
 

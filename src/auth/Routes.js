@@ -5,7 +5,7 @@ import express from "express";
 import User from "../models/UserModel.js";
 import {authenticateToken, generateToken} from "./Authentication.js";
 import {Club, MinecraftAccount} from "../models/Models.js";
-import {DataTypes} from "sequelize";
+import {sendVerificationEmail} from "../calendar/Routes.js";
 
 dotenv.config();
 const router = express.Router();
@@ -15,7 +15,7 @@ router.post('/register', async (req, res) => {
     const password = req.body.password;
 
     if (!email || !password) {
-        return res.status(400).json({ message: 'Missing email or password' });
+        return res.status(400).json({ error: 'Missing email or password' });
     }
 
     email = email.toLowerCase();
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
         const prevEmailUser = await User.findOne({ where: { email: email } });
 
         if (prevEmailUser && prevEmailUser.isVerified) {
-            return res.status(400).json({ message: 'Email is already in use' });
+            return res.status(400).json({ error: 'Email is already in use' });
         }
 
         if (prevEmailUser && !prevEmailUser.isVerified) {
@@ -37,20 +37,23 @@ router.post('/register', async (req, res) => {
 
         console.log(`A row has been inserted with rowid ${newUser.id}`);
 
+        sendVerificationEmail(newUser)
+
         return res.send(generateToken(newUser));
     } catch (error) {
         console.log("Error registering user", error);
         console.log(req.body);
-        res.status(500).send();
+        res.status(500).json({ error: error.message });
     }
 });
 
 router.post('/login', async (req, res) => {
     let email = req.body.email;
     const password = req.body.password;
+    console.log(req.body)
 
     if (!email || !password) {
-        return res.status(400).json({ message: 'Missing email or password' });
+        return res.status(400).json({ error: 'Missing email or password' });
     }
 
     email = email.toLowerCase();
@@ -58,7 +61,7 @@ router.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ where: { email: email } });
         if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(401).json({ message: 'Invalid username or password' });
+            return res.status(401).json({ error: 'Invalid username or password' });
         }
 
         res.send(generateToken(user));
@@ -70,16 +73,28 @@ router.post('/login', async (req, res) => {
 
 router.get('/account', authenticateToken, async (req, res) => {
     try {
-        const user = await User.findOne({ where: { email: req.user.email } });
+        const user = await User.findOne({
+            where: {
+                email: req.user.email
+            },
+            include: [
+                {
+                    model: Club,
+                    as: 'SubscribedClubs',
+                },
+                {
+                    model: Club,
+                    as: 'LedClubs',
+                }
+            ]
+        });
         const userData = {
             id: user.id,
             email: user.email,
             username: user.username,
             isVerified: user.isVerified,
-            isUsernameVerified: user.isUsernameVerified,
-            mcUUID: user.mcUUID,
-            isOp: user.isOp,
-            points: user.points,
+            subscriptions: user.SubscribedClubs,
+            leaders: user.LedClubs,
         }
         res.status(200).send( userData );
     } catch (error) {
@@ -90,7 +105,7 @@ router.get('/account', authenticateToken, async (req, res) => {
 router.delete('/account', authenticateToken, async (req, res) => {
     const email = req.user.email;
     if (!email) {
-        return res.status(400).json({ message: 'Error getting user' });
+        return res.status(400).json({ error: 'Error getting user' });
     }
 
     try {
@@ -135,12 +150,12 @@ router.get('/verify', (req, res) => {
     console.log("token: ", token);
 
     if (!token) {
-        return res.status(401).json({ message: 'Missing token' });
+        return res.status(401).json({ error: 'Missing token' });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, tokenData) => {
         if (err) {
-            return res.status(403).json({ message: 'Invalid or expired token' });
+            return res.status(403).json({ error: 'Invalid or expired token' });
         }
 
         if(tokenData.user && tokenData.minecraftAcount) {

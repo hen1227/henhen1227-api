@@ -6,24 +6,26 @@ import { createServer} from 'http';
 import minecraftRoutes from './minecraft/Routes.js';
 import minecraftSocketHandler from './minecraft/SocketHandler.js';
 import authRoutes from './auth/Routes.js';
+import appleRoutes from './apple/Routes.js';
 import dndRoutes from './dnd-languages/Routes.js';
 import calendarRoutes from './calendar/Routes.js';
 import clubInvitationRoutes from './club-invitation/Routes.js';
-import { startTacticoServer, tacticoGames } from "./tactico/Tactico.js";
+import { startTacticoServer } from "./tactico/Tactico.js";
 import { Server } from 'socket.io'
-import WebSocket, { WebSocketServer } from 'ws';
+import { WebSocketServer } from 'ws';
 
 import sequelize from "./models/Sequelize.js";
 import {authenticateMinecraftWs} from "./auth/Authentication.js";
 
 let port = process.env.PORT || 4001;
-const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:3000', 'http://192.168.40.50:4001', 'http://localhost:4001', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
+// const corsWhitelist = ['ws://api.henhen1227.com', 'http://localhost:3000', 'http://192.168.40.50:4001', 'http://localhost:4001', 'http://henhen1227.com', 'https://henhen1227.com','http://www.henhen1227.com', 'https://www.henhen1227.com']
 const wss = new WebSocketServer({ noServer: true });
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/minecraft', minecraftRoutes);
 app.use('/auth', authRoutes);
+app.use('/apple', appleRoutes);
 app.use('/dnd-languages', dndRoutes);
 app.use('/calendar', calendarRoutes);
 app.use('/club-invitation', clubInvitationRoutes);

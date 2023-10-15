@@ -1,14 +1,12 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import express from 'express';
 import {Purchase, ShopItem, User, GameWin, FundingCost, MinecraftAccount} from "../models/Models.js";
-import { DataTypes, Op } from "sequelize";
+import { Op } from "sequelize";
 import cron from "node-cron";
-import jwt from "jsonwebtoken";
 import {authenticateMinecraftServer, authenticateToken, generateMinecraftVerificationLink} from "../auth/Authentication.js";
 import {minecraftServerSocket} from "./SocketHandler.js";
 import fs from "fs";
 import updateDailyCostToDatabase from "./CostCalculator.js";
+
 const router = express.Router();
 
 router.post('/playerJoined', authenticateMinecraftServer, async (req, res) => {
@@ -34,7 +32,7 @@ router.post('/playerJoined', authenticateMinecraftServer, async (req, res) => {
             // Create Minecraft Account entry
             MinecraftAccount.create({ username: username, uuid: uuid, isOp: isOp });
 
-            return res.send("Account Created!");
+            return res.send("Welcome!");
             // return res.send("You do not yet have a mc.henhen1227.com account linked to this account. Create one at https://mc.henhen1227.com/register");
         }
 
@@ -42,7 +40,7 @@ router.post('/playerJoined', authenticateMinecraftServer, async (req, res) => {
 
         if(!minecraftAccount.userId){
             // No Account linked
-            return res.send('No Account linked');
+            return res.send(`Welcome back! You have ${minecraftAccount.points} points.`);
         }
 
         const user = await User.findOne({ where: { id: minecraftAccount.userId } });
@@ -50,7 +48,7 @@ router.post('/playerJoined', authenticateMinecraftServer, async (req, res) => {
         if(!user){
             // No Account linked
             MinecraftAccount.update({ userId: null, isVerified: false }, { where: { uuid: uuid } })
-            return res.send('No account linked');
+            return res.send(`Welcome back! You have ${minecraftAccount.points} points.`);
         }
 
         // If the user exists but is not verified, generate a verification link and return it
@@ -60,7 +58,7 @@ router.post('/playerJoined', authenticateMinecraftServer, async (req, res) => {
         }
 
         // If the user exists and is already verified, return a different message
-        return res.send("Welcome back! \n You are connected to your mc.henhen1227.com account.");
+        return res.send("Welcome back! \n You have ${minecraftAccount.points} points.");
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
