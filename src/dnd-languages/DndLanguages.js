@@ -62,7 +62,7 @@ export function dndLanguagesUpload(req, res) {
     let letterExt = files.length + 1;
     decodeBase64Image(databaseLocalPath+realJson.language+'/'+realJson.letter+'/Letter'+letterExt.toString()+".jpg", realJson.image.replace(/\ /g, '+'));
 
-    checkCount(realJson.language);
+    // checkCount(realJson.language);
 
     res.status(200).json({"Status": "Uploaded Successful!", "Message": "The "+letterExt.toString()+"th "+realJson.letter+" has been uploaded to the database" });
 }

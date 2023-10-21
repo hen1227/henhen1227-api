@@ -1,8 +1,31 @@
+import dotenv from 'dotenv';
 import apn from 'apn';
 import admin from 'firebase-admin';
 import {Club, DeviceToken, User} from "../models/Models.js";
-
 import serviceAccount from '../../.secrets/google-services.json' assert { type: 'json' };
+import webpush from "web-push";
+dotenv.config();
+
+// MARK: Web Push
+
+const vapidPublicKey = process.env.WEBPUSH_PUBLIC_KEY;
+const vapidPrivateKey = process.env.WEBPUSH_PRIVATE_KEY;
+
+console.log(vapidPublicKey);
+console.log(vapidPrivateKey);
+webpush.setVapidDetails(
+    'mailto:henry@henhen1227.com',
+    vapidPublicKey,
+    vapidPrivateKey
+);
+
+const sendToWebPush = (tokenData, dataToSend = 'I don\'t know why ur seeing this.') => {
+    const subscription = JSON.parse(tokenData);
+
+    webpush.sendNotification(subscription, dataToSend).catch(error => {
+        console.error(error.stack);
+    });
+}
 
 // dont forget export GOOGLE_APPLICATION_CREDENTIALS="/Users/henryabrahamsen/WebstormProjects/henhen1227-api/.secrets/google-services.json"
 admin.initializeApp({
@@ -28,7 +51,6 @@ function sendToFCM(deviceToken, message) {
 }
 
 // MARK: APN
-
 // APNs Configuration
 const apnProvider = new apn.Provider({
     token: {
@@ -70,8 +92,6 @@ export async function sendNotificationToAllDevices(message) {
     try {
         const tokens = await DeviceToken.findAll();
 
-        console.log(tokens)
-
         const iosTokens = tokens
             .filter(token => token.platform === 'ios')
             .map(token => token.token);
@@ -79,8 +99,6 @@ export async function sendNotificationToAllDevices(message) {
         const androidTokens = tokens
             .filter(token => token.platform === 'Android')
             .map(token => token.token);
-
-        console.log(iosTokens)
 
         if(iosTokens.length > 0) {
             // Send notifications to iOS devices
@@ -128,13 +146,18 @@ export async function sendNotificationToClubMembers(message, clubId) {
                     }
                 ]
             });
+            // console.log("user: ", user)
+            // console.log("token: ", token)
             if (user) {
                 const clubs = user.SubscribedClubs.map(club => club.id);
+                // console.log("clubs: ", clubs)
                 if (clubs.includes(clubId)) {
                     if (token.platform === 'ios') {
                         await sendToAPNs(token.token, message);
                     } else if (token.platform === 'Android') {
                         await sendToFCM(token.token, message);
+                    }else if (token.platform === 'web') {
+                        await sendToWebPush(token.token, message);
                     }
                 }
             }
@@ -147,6 +170,6 @@ export async function sendNotificationToClubMembers(message, clubId) {
 
 
 // Test notifications
-// setTimeout(async () => {
-//     await sendNotificationToClubMembers("Hello world!", 1);
-// }, 2000);
+setTimeout(async () => {
+    await sendNotificationToClubMembers("Hello world!", 7);
+}, 2000);

@@ -9,6 +9,14 @@ import {
 import { sendNotificationToClubMembers, sendNotificationTo } from "./Notifications.js";
 import {Op} from "sequelize";
 import {sendEmail} from "../util/SendEmail.js";
+import './DiningListener.js';
+
+
+import breakfastMenu from '../../database/dining/breakfastMenu.json' assert { type: "json" }
+import brunchMenu from '../../database/dining/brunchMenu.json' assert { type: "json" }
+import lunchMenu from '../../database/dining/lunchMenu.json' assert { type: "json" }
+import dinnerMenu from '../../database/dining/dinnerMenu.json' assert { type: "json" }
+
 
 const router = express.Router();
 
@@ -658,6 +666,28 @@ router.post('/sendVerificationEmail', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Error sending verification email:', error);
         res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+// Get All Menu Data
+router.get('/menu', async (req, res) => {
+    try {
+        const breakfastData= breakfastMenu;
+        const brunchData   = brunchMenu;
+        const lunchData    = lunchMenu;
+        const dinnerData   = dinnerMenu;
+
+
+        const menuData = {
+            'breakfast': breakfastData,
+            'brunch': brunchData,
+            'lunch': lunchData,
+            'dinner': dinnerData,
+        }
+        return res.status(200).send(menuData);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send({ error: 'Server error' });
     }
 });
 
