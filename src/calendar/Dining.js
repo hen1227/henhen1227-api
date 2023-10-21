@@ -105,3 +105,7 @@ function delay(time) {
         setTimeout(resolve, time)
     });
 }
+
+scrapeAllMenus().then(() => {
+    console.log('Updated all menus!');
+});
