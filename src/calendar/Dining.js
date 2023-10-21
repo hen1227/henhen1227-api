@@ -73,7 +73,7 @@ const scrapeMenu = async (mealType, month) => {
         const jsonString = JSON.stringify(menuDaysJSON, null, 2);
 
         // Save to json file
-        fs.writeFileSync(`../../database/dining/${mealType}Menu.json`, jsonString);
+        fs.writeFileSync(`./database/dining/${mealType}Menu.json`, jsonString);
 
         await browser.close();
     } catch (e) {
