@@ -4,8 +4,12 @@ import fs from "fs";
 const scrapeMenu = async (mealType, month) => {
     try {
         const URL = `https://sps.flikisdining.com/menu/st-pauls-school/${mealType}/print-menu/week/2023-${month}-01`;
+        const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
 
-        const browser = await puppeteer.launch({headless: 'new'});
+        const browser = await puppeteer.launch({
+            headless: 'new',
+            executablePath: executablePath,
+        });
         const page = await browser.newPage();
 
         // Set up request interception to block stylesheets
