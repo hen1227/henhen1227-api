@@ -170,6 +170,6 @@ export async function sendNotificationToClubMembers(message, clubId) {
 
 
 // Test notifications
-setTimeout(async () => {
-    await sendNotificationToClubMembers("Hello world!", 7);
-}, 2000);
+// setTimeout(async () => {
+//     await sendNotificationToClubMembers("Hello world!", 7);
+// }, 2000);
