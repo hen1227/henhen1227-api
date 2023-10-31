@@ -31,20 +31,20 @@ app.use('/calendar', calendarRoutes);
 app.use('/club-invitation', clubInvitationRoutes);
 
 const httpServer = createServer(app);
-const io = new Server(httpServer, {});
+const io = new Server(httpServer, { path: '/tactico' });
 
 // Handle Socket.IO connections
 startTacticoServer(io);
 
 // Handle upgrade requests manually
+// TODO: Fix Tactico's implementation! This is kinda messy
 httpServer.on('upgrade', (request, socket, head) => {
-    if (request.url.startsWith('/tactico')) {
-        // Let Socket.IO handle this request
+    console.log(request.url)
+    if (request.url.startsWith('/socket.io')) {
         io.engine.handleUpgrade(request, socket, head, (ws) => {
-            io.engine.emit('connection', ws, request);
+            io.engine.ws.emit('connection', ws, request);
         });
     } else {
-        // Let the plain WebSocket server handle this request
         wss.handleUpgrade(request, socket, head, (ws) => {
             wss.emit('connection', ws, request);
         });
@@ -52,11 +52,14 @@ httpServer.on('upgrade', (request, socket, head) => {
 });
 
 wss.on('connection', (ws, request) => {
+    console.log(request.url)
     if(request.url.endsWith('/minecraftServer')) {
         authenticateMinecraftWs(ws, request, minecraftSocketHandler);
     } else if (request.url.endsWith('/minecraftClient')) {
         minecraftSocketHandler(ws, request);
-    } else {
+    } else if(request.url.endsWith('/socket.io')) {
+        console.log('SocketIO websocket connection.');
+    }else {
         console.log('Unknown websocket connection');
     }
 });

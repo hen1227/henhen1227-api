@@ -9,7 +9,9 @@ function decodeBase64Image(dest, dataString) {
     console.log("Image added to:  " + dest)
 }
 
-
+// No longer checking and updating the AI
+// This is because its on a Raspberry pi
+// And that just sounds stupid lmao
 function checkCount(language) {
     let totalDownloads = 0;
     const dir = fs.readdirSync(databaseLocalPath+language+'/')
@@ -22,37 +24,21 @@ function checkCount(language) {
         currentVersion[language]['lastUpdate'] = totalDownloads;
         fs.writeFile(databaseLocalPath+'languages.json', currentVersion, 'utf8');
         //run training script
-        trainAI(language);
-
+        res.status(200).json(trainAI(language));
     }
 }
 
-function trainAI(language) {
-    PythonShell.run('py/calculate.py', {pyPath: pyPath, args: [tmpPath],}, function (err, results) {
-        if (err) {
-            PythonShell.run('py/clean_up.py', {pyPath: pyPath, args: [tmpPath2]}, function (err, results2) {
-                if (err) throw err;
-                res.json(
-                    {
-                        message: "error: Running clean up",
-                        ang: 0,
-                        vec: 0,
-                    }
-                );
-            });
-        } else {
-            let data = JSON.parse(results);
-            let message = data[0];
-            let ang = data[1];
-            let vec = data[2];
-            res.json(
-                {
-                    message: message,
-                    ang: ang,
-                    vec: vec,
-                }
-            );
-        }
+// Not fully implemented
+// FIX THIS BEFORE USING
+function trainAI(language, res) {
+    let pyPath = process.env.PYTHON_PATH || "python3";
+    PythonShell.run('../../dnd-languages/TrainAI_auto.py', {pyPath: pyPath, args: [language],}, function (err, results) {
+        if(err)
+            console.error(err);
+            return {"Status": "Training Failed!", "Message": "The AI has failed to train for "+language+"!"};
+
+        if(res)
+            return {"Status": "Training Successful!", "Message": "The AI has been trained for "+language+"!" };
     });
 }
 

@@ -1,3 +1,9 @@
+##
+## DO NOT RUN ON RASPBERRY PI
+## IT WOULD PROBABLY DIE
+## :I
+##
+
 from math import sqrt
 import random
 import cv2
@@ -8,8 +14,6 @@ from prompt_toolkit import prompt
 from PIL import Image, ImageDraw as D
 import shutil
 import json
-
-
 
 from tflite_model_maker.config import QuantizationConfig
 from tflite_model_maker.config import ExportFormat
@@ -44,8 +48,8 @@ def moveLetter(path, des, letter):
 # sourcePath = "C:/xampp/htdocs/dnd-languages/uploads/"
 # csvPath = "C:/xampp/htdocs/dnd-languages/uploads/"
 
-sourcePath = "C:\server\dnd-languages\database/"
-csvPath = "C:\server\dnd-languages\database/"
+sourcePath = "C:\server\dnd-languages\database/" # THIS IS FOR OLD WINDOWS SERVER
+csvPath = "C:\server\dnd-languages\database/" # THIS IS FOR OLD WINDOWS SERVER
 
 languages = np.array(["Draconic","Dwarvish","Elvish"])
 language = prompt("What langauge? ")

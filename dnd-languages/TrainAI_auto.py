@@ -1,3 +1,10 @@
+##
+## DO NOT RUN ON RASPBERRY PI
+## IT WOULD PROBABLY DIE
+## :I
+##
+
+
 import os
 import sys
 

@@ -20,9 +20,7 @@ function Game(serverIO, gameCode) {
 
 Game.prototype.startGame = function(){
     const self = this
-
-    console.log("Game with code:" + self.gameCode)
-
+    console.log("[Tactico] Game with code:" + self.gameCode)
 
     this.player1.on("move", function (player, x1, y1, x2, y2){
         // console.log("Moved peice from p 1")
@@ -94,7 +92,7 @@ Game.prototype.resetGame = function(){
 }
 
 Game.prototype.move = function(player, x1, y1, x2, y2){
-    console.log("Player ["+player+"] Wants to move ("+x1+","+y1+") to ("+x2+","+y2+")")
+    // console.log("Player ["+player+"] Wants to move ("+x1+","+y1+") to ("+x2+","+y2+")")
     if(this.currentTurn ===  player){
         this.serverIO.emit("move", player, x1, y1, x2, y2)
 
@@ -116,8 +114,6 @@ Game.prototype.switchTurns = function(){
 
 const addHandlers = function() {
     io.sockets.on("connect", function(socket) {
-        console.log("Connection")
-
         socket.emit("gameTypeRequest")
 
         socket.on("playOnline", function() {
@@ -137,7 +133,7 @@ const addHandlers = function() {
         })
 
         socket.onAny((event, args) => {
-            console.log(`received event: ${event} with args: ${args}`);
+            // console.log(`received event: ${event} with args: ${args}`);
         });
     })
 
@@ -148,7 +144,7 @@ const addHandlers = function() {
 
 const addToGame = function(socket){
     if(openGame == null || !openGame.player1.connected){
-        console.log("Creating new game")
+        console.log("[Tactico] Creating new game")
         openGame = new Game(io, "RG-"+randomGameCode())
         openGame.player1 = socket
 
@@ -158,7 +154,7 @@ const addToGame = function(socket){
 
         socket.join(openGame.gameCode)
     }else{
-        console.log("Adding player to game, starting match")
+        console.log("[Tactico] Adding player to game, starting match")
 
         openGame.player2 = socket
 
