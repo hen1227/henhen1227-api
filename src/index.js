@@ -72,7 +72,7 @@ app.get('/platform-climber/download', (req, res) => {
 });
 
 app.get('/resume', (req, res) => {
-    let path = `/downloads/Resume(01-23).pdf`;
+    let path = `/downloads/Henry_Abrahamsen_Resume(11-01).pdf`;
     res.download(path, {root:'.'});
 });
 
