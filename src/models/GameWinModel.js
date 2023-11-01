@@ -15,10 +15,6 @@ const GameWinModel = sequelize.define('GameWins', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    gameName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     count: {
         type: DataTypes.INTEGER,
         defaultValue: 0
