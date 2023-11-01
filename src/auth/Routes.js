@@ -50,7 +50,6 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
     let email = req.body.email;
     const password = req.body.password;
-    console.log(req.body)
 
     if (!email || !password) {
         return res.status(400).json({ error: 'Missing email or password' });

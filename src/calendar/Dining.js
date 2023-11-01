@@ -111,3 +111,14 @@ if(process.env.PRODUCTION_ENVIRONMENT) {
         console.log('Updated all menus!');
     });
 }
+
+const getMenu = (mealType) => {
+    // TODO: Research if there is a better way to do this.
+    // Is it possible to load the json as if it were an import, then update it after scraping the menu.
+    return JSON.parse(fs.readFileSync(`./database/dining/${mealType}Menu.json`, 'utf8'));
+}
+
+export const breakfastMenu = getMenu('breakfast');
+export const brunchMenu = getMenu('brunch');
+export const lunchMenu = getMenu('lunch');
+export const dinnerMenu = getMenu('dinner');

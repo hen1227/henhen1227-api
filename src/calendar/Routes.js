@@ -10,12 +10,7 @@ import { sendNotificationToClubMembers, sendNotificationTo } from "./Notificatio
 import {Op} from "sequelize";
 import {sendEmail} from "../util/SendEmail.js";
 import './DiningListener.js';
-
-
-import breakfastMenu from '../../database/dining/breakfastMenu.json' assert { type: "json" }
-import brunchMenu from '../../database/dining/brunchMenu.json' assert { type: "json" }
-import lunchMenu from '../../database/dining/lunchMenu.json' assert { type: "json" }
-import dinnerMenu from '../../database/dining/dinnerMenu.json' assert { type: "json" }
+import {breakfastMenu, brunchMenu, dinnerMenu, lunchMenu} from "./Dining.js";
 
 
 const router = express.Router();
