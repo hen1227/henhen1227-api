@@ -17,9 +17,6 @@ const router = express.Router();
 
 // Create club
 router.post('/club', authenticateToken, requireSPSEmail, async (req, res) => {
-    console.log(req.body);
-    console.log(req.user);
-
     const { name, description, color } = req.body;
     const user = await User.findOne({ where: { email: req.user.email } });
 
@@ -95,8 +92,6 @@ router.post('/club/:clubId', authenticateToken, async (req, res) => {
         const clubId = req.params.clubId;
         const {name, description, color} = req.body;
         const userObject = req.user;
-
-        console.log(req.body);
 
         if (!name || !description || !color) {
             return res.status(400).send({error: 'All fields are required!'});
@@ -349,9 +344,6 @@ router.post('/:clubId/events', authenticateToken, requireSPSEmail, async (req, r
             return res.status(404).send({ error: 'Club not found.' });
         }
 
-        console.log("club: ", club)
-        // console.log("club leaders: ", club.Leaders)
-
         // Create new event associated with the specified club
         const event = await ClubEvent.create({
             datetime: new Date(datetime),
@@ -596,8 +588,6 @@ router.get('/allData', authenticateTokenButNotRequired, async (req, res) => {
 
 // Add device token to notification database
 router.post('/saveDeviceToken', authenticateToken, async (req, res) => {
-    console.log(req)
-    console.log(req.body)
     try {
         const { deviceToken, platform } = req.body;
         const userId = req.user.id;
