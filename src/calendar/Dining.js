@@ -106,6 +106,8 @@ function delay(time) {
     });
 }
 
-// scrapeAllMenus().then(() => {
-//     console.log('Updated all menus!');
-// });
+if(process.env.PRODUCTION_ENVIRONMENT) {
+    scrapeAllMenus().then(() => {
+        console.log('Updated all menus!');
+    });
+}
