@@ -1,9 +1,9 @@
 import puppeteer from "puppeteer";
 import fs from "fs";
 
-const scrapeMenu = async (mealType, month) => {
+const scrapeMenu = async (mealType, month, year="2024") => {
     try {
-        const URL = `https://sps.flikisdining.com/menu/st-pauls-school/${mealType}/print-menu/week/2023-${month}-01`;
+        const URL = `https://sps.flikisdining.com/menu/st-pauls-school/${mealType}/print-menu/week/${year}-${month}-01`;
         const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
 
         const browser = await puppeteer.launch({
@@ -84,19 +84,20 @@ const scrapeMenu = async (mealType, month) => {
 export const scrapeAllMenus = async () => {
     // Current month int
     const month = new Date().getMonth() + 1;
+    const year = "" + new Date().getFullYear();
 
     console.log("Starting to scrape menus for the month: ", month);
 
-    await scrapeMenu('breakfast', month);
+    await scrapeMenu('breakfast', month, year);
     console.log('Updated the breakfast menu for this month!');
 
-    await scrapeMenu('brunch', month);
+    await scrapeMenu('brunch', month, year);
     console.log('Updated the brunch menu for this month!');
 
-    await scrapeMenu('lunch', month);
+    await scrapeMenu('lunch', month, year);
     console.log('Updated the lunch menu for this month!');
 
-    await scrapeMenu('dinner', month);
+    await scrapeMenu('dinner', month, year);
     console.log('Updated the dinner menu for this month!');
 }
 
