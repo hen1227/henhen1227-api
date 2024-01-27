@@ -147,13 +147,58 @@ router.post('/gameWin', authenticateMinecraftServer, async (req, res) => {
         });
 
         // If the record was not newly created, increment the count
-        if (!created) {
+        // if (!created) {
             await record.increment('count');
-        }
+        // }
 
         res.status(200).json({ success: true, message: "Win recorded successfully" });
     } catch (error) {
         console.error("Error recording win:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+router.post('/buyItem', authenticateMinecraftServer, async (req, res) => {
+    console.log(req.body)
+    try {
+        const { username, itemUniqueId, price } = req.body;
+
+        // Validate that the necessary data was provided
+        if (!username || !itemUniqueId || !price) {
+            return res.status(400).json({ error: "Required data missing" });
+        }
+
+        // Check if the user exists
+        const minecraftAccount = await MinecraftAccount.findOne({ where: { username: username } });
+
+        if (!minecraftAccount) {
+            console.log("User not found");
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        if (minecraftAccount.points < price) {
+            // Using 202 is kinda slopy...
+            return res.status(202).json({ message: "Insufficient points" });
+        }
+
+        // Subtract the cost from the user's points and save
+        minecraftAccount.points -= price;
+        await minecraftAccount.save();
+
+        // Fetch or create the game wins record for this user and game type
+        const [record, created] = await Purchase.findOrCreate({
+            where: { mcId: minecraftAccount.id, purchase: itemUniqueId },
+            defaults: { count: 0 }
+        });
+
+        // If the record was not newly created, increment the count
+        // if (!created) {
+            await record.increment('count');
+        // }
+
+        res.status(200).json({ success: true, message: "Purchase recorded successfully." });
+    } catch (error) {
+        console.error("Error recording purchase:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 });
