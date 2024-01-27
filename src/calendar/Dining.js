@@ -3,7 +3,11 @@ import fs from "fs";
 
 const scrapeMenu = async (mealType, month, year="2024") => {
     try {
-        const URL = `https://sps.flikisdining.com/menu/st-pauls-school/${mealType}/print-menu/week/${year}-${month}-01`;
+        let URL = `https://sps.flikisdining.com/menu/st-pauls-school/${mealType}/print-menu/week/${year}-${month}-01`;
+
+        if (mealType === 'grabngo') {
+            URL = `https://sps.flikisdining.com/menu/grab-n-go-deli-bar/lunch/print-menu/month/${year}-${month}-12`;
+        }
         const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
 
         const browser = await puppeteer.launch({
@@ -94,6 +98,9 @@ export const scrapeAllMenus = async () => {
     await scrapeMenu('brunch', month, year);
     console.log('Updated the brunch menu for this month!');
 
+    await scrapeMenu('grabngo', month, year);
+    console.log('Updated the grab n go menu for this month!');
+
     await scrapeMenu('lunch', month, year);
     console.log('Updated the lunch menu for this month!');
 
@@ -121,5 +128,6 @@ const getMenu = (mealType) => {
 
 export const breakfastMenu = getMenu('breakfast');
 export const brunchMenu = getMenu('brunch');
+export const grabngoMenu = getMenu('grabngo');
 export const lunchMenu = getMenu('lunch');
 export const dinnerMenu = getMenu('dinner');
