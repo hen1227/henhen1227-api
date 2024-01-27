@@ -10,7 +10,7 @@ import { sendNotificationToClubMembers, sendNotificationTo } from "./Notificatio
 import {Op} from "sequelize";
 import {sendEmail} from "../util/SendEmail.js";
 import './DiningListener.js';
-import {breakfastMenu, brunchMenu, dinnerMenu, lunchMenu} from "./Dining.js";
+import {breakfastMenu, brunchMenu, grabngoMenu, dinnerMenu, lunchMenu} from "./Dining.js";
 
 
 const router = express.Router();
@@ -659,6 +659,7 @@ router.get('/menu', async (req, res) => {
     try {
         const breakfastData= breakfastMenu;
         const brunchData   = brunchMenu;
+        const grabngo   = grabngoMenu;
         const lunchData    = lunchMenu;
         const dinnerData   = dinnerMenu;
 
@@ -666,6 +667,7 @@ router.get('/menu', async (req, res) => {
         const menuData = {
             'breakfast': breakfastData,
             'brunch': brunchData,
+            'grabngo': grabngo,
             'lunch': lunchData,
             'dinner': dinnerData,
         }
