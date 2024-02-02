@@ -70,6 +70,31 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.post('/changePassword', authenticateToken, async (req, res) => {
+    const email = req.user.email;
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+
+    if (!email || !oldPassword || !newPassword) {
+        return res.status(400).json({ error: 'Missing email or password' });
+    }
+
+    try {
+        const user = await User.findOne({ where: { email: email } });
+        if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
+            return res.status(401).json({ error: 'Invalid username or password' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await User.update({ password: hashedPassword }, { where: { email: email } });
+
+        res.send({ message: 'Password changed' });
+    } catch (error) {
+        console.log("Error changing password", error);
+        return res.status(500).json({ error: error.message });
+    }
+});
+
 router.get('/account', authenticateToken, async (req, res) => {
     try {
         const user = await User.findOne({
