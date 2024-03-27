@@ -76,6 +76,15 @@ app.get('/resume', (req, res) => {
     res.download(path, {root:'.'});
 });
 
+app.get('/download/keysoundboard_driver', (req, res) => {
+    let path = `/downloads/KeySoundboardDriver.pkg`;
+    res.download(path, {root:'.'});
+});
+app.get('/download/keysoundboard_driver_uninstall', (req, res) => {
+    let path = `/downloads/Uninstaller.pkg`;
+    res.download(path, {root:'.'});
+});
+
 app.get('/downloads/minecraft/originsModpack', (req, res) => {
     let path = `/downloads/Henhen1227_Origins_Server.zip`;
     res.download(path, {root:'.'});
