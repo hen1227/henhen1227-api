@@ -1,5 +1,4 @@
 import express from "express";
-import {authenticateTokenButNotRequired} from "../auth/Authentication.js";
 import {sendEmail} from "../util/SendEmail.js";
 import fs, {readFile} from "fs";
 
